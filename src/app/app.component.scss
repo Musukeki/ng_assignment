@@ -1,8 +1,30 @@
 .loginList {
   list-style: none;
   padding-left: 0;
+
+  li input {
+    width: 100%;
+  }
+  .loginBtn {
+    width: 100%;
+    padding: 0;
+  }
 }
 .loginWrapper {
   background-color: #ddd;
-  width: 300px;
+  width: 350px;
+}
+.loginImg {
+  background-image: url("https://picsum.photos/500/700");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 250px;
+}
+.loginContent {
+  padding: 48px 32px;
+}
+.loginLink {
+  display: flex;
+  justify-content: space-between;
 }
