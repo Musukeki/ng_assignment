@@ -1,3 +1,15 @@
+.loginWrapper {
+  margin-left: 24px;
+  margin-top: 24px;
+  box-shadow: 5px 5px 25px #aaa;
+}
+.loginContent {
+  padding: 24px 32px 48px;
+  h3 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+}
 .loginList {
   list-style: none;
   padding-left: 0;
@@ -8,10 +20,17 @@
   .loginBtn {
     width: 100%;
     padding: 0;
+
+    border: 0;
+    background-color: #51a2ed;
+    color: #fff;
+    font-weight: 700;
+    // font-size: 18px;
+    padding: 4px 0;
   }
 }
 .loginWrapper {
-  background-color: #ddd;
+  background-color: #fff;
   width: 350px;
 }
 .loginImg {
@@ -20,9 +39,6 @@
   background-repeat: no-repeat;
   background-size: cover;
   height: 250px;
-}
-.loginContent {
-  padding: 48px 32px;
 }
 .loginLink {
   display: flex;
