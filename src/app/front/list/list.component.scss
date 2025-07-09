@@ -1,6 +1,6 @@
 .container {
   max-width: 768px;
-  margin: 0 auto;
+  margin: 30px auto 0;
 }
 .topbar {
   border: 1px solid #000;
@@ -23,5 +23,30 @@
     input {
       width: 100%;
     }
+  }
+  li:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.listContent {
+  max-height: 365px;
+  overflow-y: auto;
+  display: block;
+}
+.listTable {
+  border-collapse: collapse;
+  width: 100%;
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ddd;
+    border: 1px solid #000;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
   }
 }
