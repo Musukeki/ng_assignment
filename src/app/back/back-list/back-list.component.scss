@@ -29,27 +29,27 @@
   }
 }
 
-// .listContent {
-//   max-height: 365px;
-//   overflow-y: auto;
-//   display: block;
-// }
-// .listTable {
-//   border-collapse: collapse;
-//   width: 100%;
-//   thead {
-//     position: sticky;
-//     top: 0;
-//     z-index: 10;
-//     background-color: #ddd;
-//     th {
-//       text-align: center;
-//     }
-//   }
-//   th, td {
-//     border: 1px solid #000;
-//     padding: 8px;
-//     text-align: left;
-//     text-align: center;
-//   }
-// }
+.listContent {
+  max-height: 365px;
+  overflow-y: auto;
+  display: block;
+}
+.listTable {
+  border-collapse: collapse;
+  width: 100%;
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ddd;
+    th {
+      text-align: center;
+    }
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+    text-align: center;
+  }
+}

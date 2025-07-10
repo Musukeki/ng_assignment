@@ -1,19 +1,26 @@
 <router-outlet></router-outlet>
 
-<ul style="position: fixed; bottom: 10px; left: 10px; display: flex;">
-  <li>
-    <button (click)="checkTo('/login')">使用者登入頁</button>
-  </li>
-  <li>
-    <button (click)="checkTo('/front/list')">前台問卷列表</button>
-  </li>
-  <li>
-    <button (click)="checkTo('/front/answer')">前台內頁作答</button>
-  </li>
-  <li>
-    <button (click)="checkTo('/front/check')">前台確認頁</button>
-  </li>
-  <li>
-    <button (click)="checkTo('/front/statistical')">統計結果</button>
-  </li>
-</ul>
+<div class="buttonGroup" style="position: fixed; bottom: 10px; left: 10px;">
+  <ul style="display: flex; margin-bottom: 8px;">
+    <li>
+      <button (click)="checkTo('/login')">使用者登入頁</button>
+    </li>
+    <li>
+      <button (click)="checkTo('/front/list')">前台問卷列表</button>
+    </li>
+    <li>
+      <button (click)="checkTo('/front/answer')">前台內頁作答</button>
+    </li>
+    <li>
+      <button (click)="checkTo('/front/check')">前台確認頁</button>
+    </li>
+    <li>
+      <button (click)="checkTo('/front/statistical')">統計結果</button>
+    </li>
+  </ul>
+  <ul  style="display: flex;">
+    <li>
+      <button (click)="checkTo('/back/backList')">後台列表</button>
+    </li>
+  </ul>
+</div>
