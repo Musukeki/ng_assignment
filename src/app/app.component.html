@@ -2,6 +2,9 @@
 
 <ul style="position: fixed; bottom: 10px; left: 10px; display: flex;">
   <li>
+    <button (click)="checkTo('/login')">使用者登入頁</button>
+  </li>
+  <li>
     <button (click)="checkTo('/front/list')">前台問卷列表</button>
   </li>
   <li>
@@ -9,5 +12,8 @@
   </li>
   <li>
     <button (click)="checkTo('/front/check')">前台確認頁</button>
+  </li>
+  <li>
+    <button (click)="checkTo('/front/statistical')">統計結果</button>
   </li>
 </ul>

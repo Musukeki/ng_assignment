@@ -10,21 +10,21 @@
     <li>
       <div>
         <p>姓名</p>
-        <input>
+        <input [(ngModel)]="userNameAnswer">
       </div>
       <div>
         <p>手機</p>
-        <input>
+        <input [(ngModel)]="userPhoneAnswer">
       </div>
     </li>
     <li>
       <div>
         <p>Email</p>
-        <input>
+        <input [(ngModel)]="userEmailAnswer">
       </div>
       <div>
         <p>年齡</p>
-        <input>
+        <input [(ngModel)]="userAgeAnswer">
       </div>
     </li>
   </ul>
@@ -35,7 +35,7 @@
       <ul>
         <li>
           <label for="japan">日本</label>
-          <input type="radio" name="country" value="japan">
+          <input [(ngModel)]="userAnswer1" type="radio" name="country" value="日本">
         </li>
         <li>
           <label for="taiwan">台灣</label>
@@ -54,13 +54,13 @@
 
     <li>
       <p class="answerContentTitle">2.請說明原因：</p>
-      <textarea rows="6" cols="50"></textarea>
+      <textarea rows="6" cols="50" [(ngModel)]="userAnswer2"></textarea>
     </li>
   </ul>
 
   <div class="submitButtons">
     <button>取消</button>
-    <button>送出</button>
+    <button (click)="checkTo('/front/check')">送出</button>
   </div>
 
 </div>

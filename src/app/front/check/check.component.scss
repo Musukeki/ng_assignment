@@ -1,0 +1,50 @@
+.container {
+  max-width: 768px;
+  margin: 30px auto 0;
+}
+.questionnaireDate {
+  display: flex;
+  justify-content: flex-end;
+}
+.questionnaireTitle {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+.questionnaireDescription {
+  margin-bottom: 24px;
+}
+.answerUsers {
+  margin-bottom: 24px;
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+    div {
+      width: 45%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    input {
+      width: 80%;
+    }
+  }
+  li:first-child {
+    margin-bottom: 8px;
+  }
+}
+
+.answerContent {
+  .answerContentTitle {
+    margin-bottom: 12px;
+  }
+  .answerContentItem {
+    margin-bottom: 24px;
+  }
+}
+
+.submitButtons {
+  display: flex;
+  justify-content: flex-end;
+}
