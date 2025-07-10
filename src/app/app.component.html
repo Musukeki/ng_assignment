@@ -1,2 +1,13 @@
 <router-outlet></router-outlet>
 
+<ul style="position: fixed; bottom: 10px; left: 10px; display: flex;">
+  <li>
+    <button (click)="checkTo('/front/list')">前台問卷列表</button>
+  </li>
+  <li>
+    <button (click)="checkTo('/front/answer')">前台內頁作答</button>
+  </li>
+  <li>
+    <button (click)="checkTo('/front/check')">前台確認頁</button>
+  </li>
+</ul>
