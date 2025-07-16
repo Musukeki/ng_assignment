@@ -1,10 +1,10 @@
 <div class="container">
 
-  <p class="questionnaireDate">2025/07/09 - 2025/09/12</p>
+  <p class="questionnaireDate">{{ quesData.startDate }} - {{ quesData.endDate }}</p>
 
-  <h2 class="questionnaireTitle">問卷題目</h2>
+  <h2 class="questionnaireTitle">{{ quesData.title }}</h2>
 
-  <p class="questionnaireDescription">古北她喝花己意看對乞也戊哪吹生它止青即，王斤一片打笑「原未蝶」父祖大婆訴後後年完害斤遠身公。很兌五下司兆衣，石個大即草怕去中定來頁且棵辛里辛「冒民青飯日向個」未子息斥天良頭麼。古北她喝花己意看對乞也戊哪吹生它止青即，王斤一片打笑「原未蝶」父祖大婆訴後後年完害斤遠身公。很兌五下司兆衣，石個大即草怕去中定來頁且棵辛里辛「冒民青飯日向個」未子息斥天良頭麼。</p>
+  <p class="questionnaireDescription">{{ quesData.description }}</p>
 
   <ul class="answerUsers">
     <li>
@@ -30,32 +30,44 @@
   </ul>
 
   <ul class="answerContent">
-    <li class="answerContentItem">
-      <p class="answerContentTitle">1.請選擇您喜歡的國家：</p>
-      <ul>
-        <li>
-          <label for="japan">日本</label>
-          <input [(ngModel)]="userAnswer1" type="radio" name="country" value="日本">
-        </li>
-        <li>
-          <label for="taiwan">台灣</label>
-          <input type="radio" name="country" value="taiwan">
-        </li>
-        <li>
-          <label for="england">英國</label>
-          <input type="radio" name="country" value="england">
-        </li>
-        <li>
-          <label for="austraria">澳洲</label>
-          <input type="radio" name="country" value="austraria">
-        </li>
-      </ul>
-    </li>
+    @for(data of quesData.questArr; track $index) {
+      <li class="answerContentItem">
+        <p class="answerContentTitle">{{ data.questName }}</p>
+        <ul>
+          <!-- 單選 -->
+          @if(data.type == 'multiple') {
+            @for(item of data.questList; track $index) {
+              <li>
+                <label for="{{ item.name }}">{{ item.name }}</label>
+                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}">
+              </li>
+            }
+          }
 
-    <li>
+          <!-- 多選 -->
+          @if(data.type == 'single') {
+            @for(item of data.questList; track $index) {
+              <li>
+                <label for="{{ data.questId }}">{{ item.name }}</label>
+                <input type="radio" name="{{ data.questId }}" value="{{ item.code }}">
+              </li>
+            }
+          }
+
+          <!-- 文字輸入 -->
+          @if(data.type == 'text') {
+            <li>
+              <textarea rows="6" cols="50" name="{{ data.questId }}"></textarea>
+            </li>
+          }
+        </ul>
+      </li>
+    }
+
+    <!-- <li>
       <p class="answerContentTitle">2.請說明原因：</p>
       <textarea rows="6" cols="50" [(ngModel)]="userAnswer2"></textarea>
-    </li>
+    </li> -->
   </ul>
 
   <div class="submitButtons">
