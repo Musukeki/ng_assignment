@@ -39,7 +39,7 @@
             @for(item of data.questList; track $index) {
               <li>
                 <label for="{{ item.name }}">{{ item.name }}</label>
-                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}">
+                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}" [(ngModel)]="userQuestAnswer">
               </li>
             }
           }
@@ -63,11 +63,6 @@
         </ul>
       </li>
     }
-
-    <!-- <li>
-      <p class="answerContentTitle">2.請說明原因：</p>
-      <textarea rows="6" cols="50" [(ngModel)]="userAnswer2"></textarea>
-    </li> -->
   </ul>
 
   <div class="submitButtons">

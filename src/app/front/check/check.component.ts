@@ -18,9 +18,11 @@ export class CheckComponent {
   userEmailCheck!: string;
   userAgeCheck!: number;
 
-  userAnswer1Check!: string;
+  userQuestCheck!: string;
 
-  userAnswer2Check!: string;
+  questionnaireTitleCheck!: string;
+  questionnaireDescCheck!: string;
+
 
   ngOnInit(): void {
 
@@ -28,8 +30,11 @@ export class CheckComponent {
     this.userPhoneCheck = this.usersService.userPhoneService;
     this.userEmailCheck = this.usersService.userEmailService;
     this.userAgeCheck = this.usersService.userAgeService;
-    this.userAnswer1Check = this.usersService.userQuestion1;
-    this.userAnswer2Check = this.usersService.userQuestion2;
+
+    this.userQuestCheck = this.usersService.userQuestData;
+
+    this.questionnaireTitleCheck = this.usersService.questionnaireTitleService;
+    this.questionnaireDescCheck = this.usersService.questionnaireDescService;
   }
 
   checkTo(url: string) {

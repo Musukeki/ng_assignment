@@ -21,9 +21,10 @@ export class AnswerComponent {
   userEmailAnswer!: string;
   userAgeAnswer!: number;
 
-  userAnswer1!: string;
+  questionnaireTitleAnswer!: string;
+  questionnaireDescAnswer!: string;
 
-  userAnswer2!: string;
+  userQuestAnswer!: any;
 
   // 假資料
 
@@ -80,8 +81,9 @@ export class AnswerComponent {
     this.usersService.userEmailService = this.userEmailAnswer;
     this.usersService.userAgeService = this.userAgeAnswer;
 
-    this.usersService.userQuestion1 = this.userAnswer1;
+    this.usersService.userQuestData = this.userQuestAnswer;
 
-    this.usersService.userQuestion2 = this.userAnswer2;
+    this.usersService.questionnaireTitleService = this.quesData.title;
+    this.usersService.questionnaireDescService = this.quesData.description;
   }
 }
