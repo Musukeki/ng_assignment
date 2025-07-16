@@ -67,7 +67,7 @@
       <ng-container matColumnDef="結果">
         <th mat-header-cell *matHeaderCellDef> 結果 </th>
         <td mat-cell *matCellDef="let element">
-          <a *ngIf="element.status == '已結束'" routerLink="/front/statistical" style="color: rgb(112, 161, 202);">查看結果</a>
+          <a *ngIf="element.status == '已結束'" routerLink="/front/statistical" style="color: rgb(143, 112, 202);">查看結果</a>
           <span *ngIf="element.status != '已結束'">-</span>
         </td>
       </ng-container>
