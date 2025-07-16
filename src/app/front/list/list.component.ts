@@ -1,13 +1,19 @@
 import { FormsModule } from '@angular/forms';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-list',
-  imports: [ FormsModule, MatTableModule, MatPaginatorModule ],
+  imports: [ FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink ],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
+  standalone: true, // Angular 17+ 要加上否則 @if 會有問題
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getCustomPaginatorIntl() }
+  ]
 })
 
 
@@ -33,10 +39,10 @@ export class ListComponent implements AfterViewInit {
     })
 
     this.newData = new MatTableDataSource(filterArr);
-    console.log(this.newData)
+
+    console.log('原始資料', this.dataSource.data)
+    console.log('篩選後資料', this.newData.data)
   }
-
-
 
 }
 
@@ -58,3 +64,25 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { number: 6, name: '最有錢員工', status: '進行中', startDate: '2025/07/13', endDate: '2025/07/19', result: true },
   { number: 7, name: '最窮員工', status: '已結束', startDate: '2025/07/10', endDate: '2025/07/16', result: true }
 ];
+
+// mat-paginator 底部文字設定
+export function getCustomPaginatorIntl(): MatPaginatorIntl {
+  const paginatorIntl = new MatPaginatorIntl();
+
+  paginatorIntl.itemsPerPageLabel = '每頁顯示筆數';
+  paginatorIntl.nextPageLabel = '下一頁';
+  paginatorIntl.previousPageLabel = '上一頁';
+  paginatorIntl.firstPageLabel = '第一頁';
+  paginatorIntl.lastPageLabel = '最後一頁';
+
+  paginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+    if (length === 0 || pageSize === 0) {
+      return `第 0 筆，共 ${length} 筆`;
+    }
+    const startIndex = page * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, length);
+    return `第 ${startIndex + 1} - ${endIndex} 筆，共 ${length} 筆`;
+  };
+
+  return paginatorIntl;
+}

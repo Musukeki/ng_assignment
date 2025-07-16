@@ -32,5 +32,18 @@
 table {
   th, tr, td {
     vertical-align: middle;
+    text-align: center;
   }
+}
+.mat-mdc-row {
+  transition: .3s;
+  &:hover {
+    background: #fff2d9;
+  }
+}
+.mat-mdc-paginator {
+  background-color: #c6d4ea;
+}
+.mat-mdc-header-cell, .mat-mdc-cell {
+  border-bottom: 1px solid rgb(126, 169, 193);
 }
