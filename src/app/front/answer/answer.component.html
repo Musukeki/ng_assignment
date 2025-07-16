@@ -39,7 +39,7 @@
             @for(item of data.questList; track $index) {
               <li>
                 <label for="{{ item.name }}">{{ item.name }}</label>
-                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}" [(ngModel)]="userQuestAnswer">
+                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}">
               </li>
             }
           }

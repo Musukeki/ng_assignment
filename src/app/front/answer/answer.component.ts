@@ -1,8 +1,8 @@
+import { SourceDataService } from './../../@services/source-data.service';
 import { Router, RouterLink } from '@angular/router';
 import { UsersService } from './../../@services/users.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-answer',
@@ -12,8 +12,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class AnswerComponent {
 
-  constructor(private usersService: UsersService,
-    private router: Router
+  constructor(
+    private usersService: UsersService,
+    private router: Router,
+    private sourceDataService: SourceDataService
   ) {}
 
   userNameAnswer!: string;
@@ -71,7 +73,7 @@ export class AnswerComponent {
 
   ngOnInit(): void {
     // this.usersService.userNameService = this.userNameAnswer;
-
+    // console.log(this.sourceDataService.sourceData)
   }
 
     checkTo(url: string) {
