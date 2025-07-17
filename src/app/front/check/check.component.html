@@ -28,13 +28,22 @@
 
 
   <ul class="answerContent">
-    <!-- <li class="answerContentItem">
-      <p class="answerContentTitle">1.請選擇您喜歡的國家：{{ userQuestCheck }}</p>
-      <ul>
-        <li></li>
-      </ul>
-    </li> -->
-
+    @for(data of userChoiceData; track $index) {
+      <li class="answerContentItem">
+        <p class="answerContentTitle">{{ data.questName }}：</p>
+        @if(data.type == 'single') {
+          <span>{{ data.singleChoice }}</span>
+        }
+        @if(data.type == 'text') {
+          <span>{{ data.textContent }}</span>
+        }
+        @if(data.type == 'multiple') {
+          @for(choices of data.multipleChoice; track $index) {
+            <span>{{ choices }}</span>
+          }
+        }
+      </li>
+    }
   </ul>
 
   <div class="submitButtons">

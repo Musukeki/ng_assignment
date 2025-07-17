@@ -36,11 +36,14 @@
 }
 
 .answerContent {
+  border-top: 1px solid #000;
+  padding-top: 24px;
   .answerContentTitle {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    font-weight: 500;
   }
   .answerContentItem {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
 }
 

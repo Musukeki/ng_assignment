@@ -22,7 +22,7 @@ export class CheckComponent {
   endDate!: string;
   description!: string;
 
-  userQuestData!: any; // 使用者填寫的問卷資料
+  // userQuestData!: any; // 使用者填寫的問卷資料
 
   userChoiceData!: Array<any>;
 
