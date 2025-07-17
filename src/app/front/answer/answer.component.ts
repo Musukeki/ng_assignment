@@ -18,18 +18,18 @@ export class AnswerComponent {
     private sourceDataService: SourceDataService
   ) {}
 
-  userNameAnswer!: string;
-  userPhoneAnswer!: number;
-  userEmailAnswer!: string;
-  userAgeAnswer!: number;
+  userNameAnswer!: string; // 填表者名稱
+  userPhoneAnswer!: number; // 填表者電話
+  userEmailAnswer!: string; // 填表者信箱
+  userAgeAnswer!: number; // 填表者年齡
 
-  questionnaireTitleAnswer!: string;
-  questionnaireDescAnswer!: string;
+
+  // questionnaireTitleAnswer!: string;
+  // questionnaireDescAnswer!: string;
 
   userQuestAnswer!: any;
 
   // 假資料
-
   quesData = {
     id: 1,
     title: '台灣超市比拼調查',
@@ -70,22 +70,31 @@ export class AnswerComponent {
     ]
   }
 
+  // 使用者填寫的內容
+  newArr: Array<any> = [];
+  userName!: string;
+  userPhone!: string;
+  userEmail!: string;
+  userAge!: string;
+  title!: string;
+  startDate!: string;
+  endDate!: string;
+  description!: string;
+
+
 
   ngOnInit(): void {
-    // this.usersService.userNameService = this.userNameAnswer;
-    // console.log(this.sourceDataService.sourceData)
+    this.title = this.quesData.title;
+    this.startDate = this.quesData.startDate;
+    this.endDate = this.quesData.endDate;
+    this.description = this.quesData.description;
   }
 
     checkTo(url: string) {
     this.router.navigate([url]);
-    this.usersService.userNameService = this.userNameAnswer;
-    this.usersService.userPhoneService = this.userPhoneAnswer;
-    this.usersService.userEmailService = this.userEmailAnswer;
-    this.usersService.userAgeService = this.userAgeAnswer;
-
-    this.usersService.userQuestData = this.userQuestAnswer;
-
-    this.usersService.questionnaireTitleService = this.quesData.title;
-    this.usersService.questionnaireDescService = this.quesData.description;
+    this.usersService.userName = this.userName;
+    this.usersService.userPhone = this.userPhone;
+    this.usersService.userEmail = this.userEmail;
+    this.usersService.userAge = this.userAge;
   }
 }

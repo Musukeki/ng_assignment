@@ -13,10 +13,10 @@ export class CheckComponent {
     private router: Router
 ) {}
 
-  userNameCheck!: string;
-  userPhoneCheck!: number;
-  userEmailCheck!: string;
-  userAgeCheck!: number;
+  userName!: string;
+  userPhone!: string;
+  userEmail!: string;
+  userAge!: string;
 
   userQuestCheck!: string;
 
@@ -26,15 +26,11 @@ export class CheckComponent {
 
   ngOnInit(): void {
 
-    this.userNameCheck = this.usersService.userNameService;
-    this.userPhoneCheck = this.usersService.userPhoneService;
-    this.userEmailCheck = this.usersService.userEmailService;
-    this.userAgeCheck = this.usersService.userAgeService;
+    this.userName = this.usersService.userName;
+    this.userPhone = this.usersService.userPhone;
+    this.userEmail = this.usersService.userEmail;
+    this.userAge = this.usersService.userAge;
 
-    this.userQuestCheck = this.usersService.userQuestData;
-
-    this.questionnaireTitleCheck = this.usersService.questionnaireTitleService;
-    this.questionnaireDescCheck = this.usersService.questionnaireDescService;
   }
 
   checkTo(url: string) {
