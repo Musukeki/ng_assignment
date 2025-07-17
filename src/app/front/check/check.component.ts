@@ -18,6 +18,8 @@ export class CheckComponent {
   userEmail!: string;
   userAge!: string;
   title!: string;
+  startDate!: string;
+  endDate!: string;
   description!: string;
 
   userQuestData!: any; // 使用者填寫的問卷資料
@@ -33,6 +35,8 @@ export class CheckComponent {
     this.userAge = this.usersService.userAge;
 
     this.title = this.usersService.title;
+    this.startDate = this.usersService.startDate;
+    this.endDate = this.usersService.endDate;
     this.description = this.usersService.description;
 
     this.userChoiceData = this.usersService.userChoiceData;

@@ -17,6 +17,8 @@ export class UsersService {
   userAge!: string;
 
   title!: string;
+  startDate!: string;
+  endDate!: string;
   description!: string;
 
   // 填表者問卷輸入每個選項內容

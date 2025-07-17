@@ -18,17 +18,6 @@ export class AnswerComponent {
     private sourceDataService: SourceDataService
   ) {}
 
-  userNameAnswer!: string; // 填表者名稱
-  userPhoneAnswer!: number; // 填表者電話
-  userEmailAnswer!: string; // 填表者信箱
-  userAgeAnswer!: number; // 填表者年齡
-
-
-  // questionnaireTitleAnswer!: string;
-  // questionnaireDescAnswer!: string;
-
-  userQuestAnswer!: any;
-
 
   // 假資料
   quesData = {
@@ -115,10 +104,6 @@ export class AnswerComponent {
       this.newArr.push({...arr, singleChoice: '', textContent: '', multipleChoice: []})
     }
     console.log(this.newArr)
-
-
-
-
   }
 
   // 多選設定
@@ -150,6 +135,8 @@ export class AnswerComponent {
     this.usersService.userAge = this.userAge;
 
     this.usersService.title = this.title;
+    this.usersService.startDate = this.startDate;
+    this.usersService.endDate = this.endDate;
     this.usersService.description = this.description;
 
     this.usersService.userChoiceData = this.newArr
