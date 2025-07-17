@@ -16,6 +16,11 @@ export class UsersService {
   userEmail!: string;
   userAge!: string;
 
+  title!: string;
+  description!: string;
+
   // 填表者問卷輸入每個選項內容
   userQuestData: any = {};
+
+  userChoiceData!: Array<any>;
 }

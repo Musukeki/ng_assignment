@@ -30,26 +30,26 @@
   </ul>
 
   <ul class="answerContent">
-    @for(data of quesData.questArr; track $index) {
+    @for(data of quesData.questArr; track $index; let i = $index) {
       <li class="answerContentItem">
         <p class="answerContentTitle">{{ data.questName }}</p>
         <ul>
-          <!-- 單選 -->
+          <!-- 多選 -->
           @if(data.type == 'multiple') {
             @for(item of data.questList; track $index) {
               <li>
                 <label for="{{ item.name }}">{{ item.name }}</label>
-                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}">
+                <input type="checkbox" name="{{ item.name }}" value="{{ item.code }}" [checked]="newArr[i].multipleChoice.includes(item.code)" (change)="onCheckboxChange($event, i, item.code)">
               </li>
             }
           }
 
-          <!-- 多選 -->
+          <!-- 單選 -->
           @if(data.type == 'single') {
-            @for(item of data.questList; track $index) {
+            @for(item of data.questList; track $index; let s = $index) {
               <li>
                 <label for="{{ data.questId }}">{{ item.name }}</label>
-                <input type="radio" name="{{ data.questId }}" value="{{ item.code }}">
+                <input type="radio" name="{{ data.questId }}" value="{{ item.code }}" [(ngModel)]="newArr[i].singleChoice">
               </li>
             }
           }
@@ -57,7 +57,7 @@
           <!-- 文字輸入 -->
           @if(data.type == 'text') {
             <li>
-              <textarea rows="6" cols="50" name="{{ data.questId }}"></textarea>
+              <textarea rows="6" cols="50" name="{{ data.questId }}" [(ngModel)]="newArr[i].textContent"></textarea>
             </li>
           }
         </ul>

@@ -17,11 +17,12 @@ export class CheckComponent {
   userPhone!: string;
   userEmail!: string;
   userAge!: string;
+  title!: string;
+  description!: string;
 
-  userQuestCheck!: string;
+  userQuestData!: any; // 使用者填寫的問卷資料
 
-  questionnaireTitleCheck!: string;
-  questionnaireDescCheck!: string;
+  userChoiceData!: Array<any>;
 
 
   ngOnInit(): void {
@@ -31,6 +32,12 @@ export class CheckComponent {
     this.userEmail = this.usersService.userEmail;
     this.userAge = this.usersService.userAge;
 
+    this.title = this.usersService.title;
+    this.description = this.usersService.description;
+
+    this.userChoiceData = this.usersService.userChoiceData;
+
+    console.log(this.userChoiceData)
   }
 
   checkTo(url: string) {

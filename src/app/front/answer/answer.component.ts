@@ -29,6 +29,7 @@ export class AnswerComponent {
 
   userQuestAnswer!: any;
 
+
   // 假資料
   quesData = {
     id: 1,
@@ -52,8 +53,20 @@ export class AnswerComponent {
       {
         questId: 2,
         isRequired: true,
-        questName: '平均一週光顧次數',
+        questName: '這間超市最吸引您的地方',
         type: 'multiple',
+        questList: [
+          { name: '環境', code: 'A' },
+          { name: '價格', code: 'B' },
+          { name: '食物', code: 'C' },
+          { name: '距離', code: 'D' }
+        ]
+      },
+      {
+        questId: 3,
+        isRequired: true,
+        questName: '平均一週光顧次數',
+        type: 'single',
         questList: [
           { name: '3 次以下', code: 'A' },
           { name: '3 ~ 7 次', code: 'B' },
@@ -61,11 +74,18 @@ export class AnswerComponent {
         ]
       },
       {
-        questId: 3,
+        questId: 4,
         isRequired: true,
         questName: '請簡述這家超市和其他的差異',
         type: 'text',
-        textContent: '我不知道'
+        textContent: ''
+      },
+      {
+        questId: 5,
+        isRequired: true,
+        questName: '想對這家超市說的話',
+        type: 'text',
+        textContent: ''
       },
     ]
   }
@@ -83,18 +103,55 @@ export class AnswerComponent {
 
 
 
+
   ngOnInit(): void {
     this.title = this.quesData.title;
     this.startDate = this.quesData.startDate;
     this.endDate = this.quesData.endDate;
     this.description = this.quesData.description;
+
+
+    for(let arr of this.quesData.questArr) {
+      this.newArr.push({...arr, singleChoice: '', textContent: '', multipleChoice: []})
+    }
+    console.log(this.newArr)
+
+
+
+
   }
 
-    checkTo(url: string) {
+  // 多選設定
+  onCheckboxChange(event: Event, questionIndex: number, code: string) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const multipleChoiceArr = this.newArr[questionIndex].multipleChoice;
+
+    if (isChecked) {
+      // 如果勾選了，加入陣列（避免重複）
+      if (!multipleChoiceArr.includes(code)) {
+        multipleChoiceArr.push(code);
+      }
+    } else {
+      // 取消勾選，從陣列移除
+      const index = multipleChoiceArr.indexOf(code);
+      if (index > -1) {
+        multipleChoiceArr.splice(index, 1);
+      }
+    }
+  }
+
+
+  checkTo(url: string) {
     this.router.navigate([url]);
+
     this.usersService.userName = this.userName;
     this.usersService.userPhone = this.userPhone;
     this.usersService.userEmail = this.userEmail;
     this.usersService.userAge = this.userAge;
+
+    this.usersService.title = this.title;
+    this.usersService.description = this.description;
+
+    this.usersService.userChoiceData = this.newArr
   }
 }
