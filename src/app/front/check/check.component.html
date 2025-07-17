@@ -39,7 +39,7 @@
         }
         @if(data.type == 'multiple') {
           @for(choices of data.multipleChoice; track $index) {
-            <span>{{ choices }}</span>
+            <div>{{ choices }}</div>
           }
         }
       </li>
