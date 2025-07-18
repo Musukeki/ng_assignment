@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import Chart from 'chart.js/auto';
+// import Chart from 'chart.js/auto';
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 
 @Component({
   selector: 'app-statistical',
@@ -8,8 +9,6 @@ import Chart from 'chart.js/auto';
   styleUrl: './statistical.component.scss'
 })
 export class StatisticalComponent {
-
-  newData: Array<any> = [];
 
   quesData = {
     title: '台灣超市比拼調查',
@@ -22,7 +21,7 @@ export class StatisticalComponent {
         type: 'single',
         labels: ['7-11', '全家', '萊爾富', 'OK'],
         data: [31, 26, 9, 12],
-        color: ['red', 'blue', 'green', 'purple']
+        color: ['#687FE5', '#EBD6FB', '#FEEBF6', '#FCD8CD']
       },
       {
         questId: '2',
@@ -30,7 +29,7 @@ export class StatisticalComponent {
         type: 'multiple',
         labels: ['環境', '價格', '食物', '距離'],
         data: [18, 9, 11, 27],
-        color: ['red', 'blue', 'green', 'purple']
+        color: ['#687FE5', '#EBD6FB', '#FEEBF6', '#FCD8CD']
       },
       {
         questId: '3',
@@ -38,7 +37,7 @@ export class StatisticalComponent {
         type: 'single',
         labels: ['3 次以下', '3 ~ 7 次', '7 次以上'],
         data: [18, 9, 11, 27],
-        color: ['red', 'blue', 'green']
+        color: ['#687FE5', '#EBD6FB', '#FEEBF6']
       },
       {
         questId: '4',
@@ -46,46 +45,51 @@ export class StatisticalComponent {
         type: 'text',
         labels: [],
         data: ['活動很多', '店員很親切', '廁所很乾淨'],
-        color: ['red', 'blue', 'green']
+        color: ['#687FE5', '#EBD6FB', '#FEEBF6']
       },
       {
         questId: '5',
         questName: '想對這家超市說的話',
         type: 'text',
-        label: [],
+        labels: [],
         data: ['請繼續保持', '咖啡真是好喝', '大夜班那個給我注意一點'],
-        color: ['red', 'blue', 'green']
+        color: ['#687FE5', '#EBD6FB', '#FEEBF6']
       },
     ]
   }
 
 
-  ngOnInit(): void {
+ngAfterViewInit(): void {
+  for(let arr of this.quesData.questArr) {
+    const ctx = document.getElementById(arr.questId) as HTMLCanvasElement;
 
-  }
+    const data = {
+      labels: arr.labels,
+      datasets: [{
+        // label: 'My First Dataset',
+        data: arr.data as number[],
+        backgroundColor: arr.color,
+        hoverOffset: 4
+      }]
+    };
 
+    const config: ChartConfiguration<'doughnut'> = {
+      type: 'doughnut',
+      data: data,
+      options: {
+        plugins: {
+          legend: {
+            position: 'right',
+          }
+        }
+      }
+    };
 
-  ngAfterViewInit(): void {
-
-    for(let chart of this.quesData.questArr) {
-      // chart.js
-      let ctx = document.getElementById(chart.questId) as HTMLCanvasElement;
-
-        let data = {
-          labels: chart.labels,
-          datasets: [{
-            label: chart.label,
-            data: chart.data,
-            backgroundColor: chart.color,
-            hoverOffset: 4
-          }]
-        };
-
-        const config = {
-          type: 'doughnut',
-          data: data,
-        };
+      if (ctx) {
+        new Chart(ctx, config);
+      } else {
+        console.error('Canvas element not found');
       }
     }
-
+  }
 }
