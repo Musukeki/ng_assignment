@@ -58,7 +58,7 @@ export interface PeriodicElement {
   status: string;
   startDate: string;
   endDate: string;
-  result: boolean
+  id: string;
 }
 
 // mat-paginator

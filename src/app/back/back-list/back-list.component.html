@@ -4,7 +4,7 @@
   <ul class="topbar">
     <li>
       <p>問卷名稱</p>
-      <input placeholder="請輸入問券名稱關鍵字">
+      <input placeholder="請輸入問券名稱關鍵字" [(ngModel)]="inputContent">
     </li>
     <li>
       <div>
@@ -19,176 +19,64 @@
     </li>
   </ul>
 
+  <button style="border: 0; padding: 8px; margin-right: 4px; cursor: pointer;">新增</button>
+  <button style="border: 0; padding: 8px; cursor: pointer;" (click)="deleteData()">刪除</button>
+
   <!-- 下方列表 -->
-  <div class="listContent">
-    <table class="listTable">
-      <thead>
-        <tr>
-          <th></th>
-          <th>編號</th>
-          <th>名稱</th>
-          <th>狀態</th>
-          <th>開始時間</th>
-          <th>結束時間</th>
-          <th>結果</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#1</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#2</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#3</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#4</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#5</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#6</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#7</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#8</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#9</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#10</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#11</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#12</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#13</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td>#14</td>
-          <td>問卷名稱</td>
-          <td>尚未開始</td>
-          <td>2025/07/09</td>
-          <td>2025/07/12</td>
-          <td>前往</td>
-        </tr>
-      </tbody>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="newData">
+
+      <ng-container matColumnDef="選取操作">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <input type="checkbox" [(ngModel)]="element.checked">
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="編號">
+        <th mat-header-cell *matHeaderCellDef> 編號 </th>
+        <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="名稱">
+        <th mat-header-cell *matHeaderCellDef> 名稱 </th>
+        <td mat-cell *matCellDef="let element">
+          <a *ngIf="element.status == '進行中'" routerLink="" style="color: rgb(143, 112, 202);">{{ element.name }}</a>
+          <span *ngIf="element.status != '進行中'">{{ element.name }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="狀態">
+        <th mat-header-cell *matHeaderCellDef> 狀態 </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="開始時間">
+        <th mat-header-cell *matHeaderCellDef> 開始時間 </th>
+        <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="結束時間">
+        <th mat-header-cell *matHeaderCellDef> 結束時間 </th>
+        <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="結果">
+        <th mat-header-cell *matHeaderCellDef> 結果 </th>
+        <td mat-cell *matCellDef="let element">
+          <a *ngIf="element.status == '已結束'" routerLink="" style="color: rgb(143, 112, 202);">查看結果</a>
+          <span *ngIf="element.status != '已結束'">-</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.data-result]="row.id"></tr>
     </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
   </div>
+
+
+  <!-- </div> -->
 </div>

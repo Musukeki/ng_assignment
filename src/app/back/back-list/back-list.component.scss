@@ -29,27 +29,21 @@
   }
 }
 
-.listContent {
-  max-height: 365px;
-  overflow-y: auto;
-  display: block;
-}
-.listTable {
-  border-collapse: collapse;
-  width: 100%;
-  thead {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: #ddd;
-    th {
-      text-align: center;
-    }
-  }
-  th, td {
-    border: 1px solid #000;
-    padding: 8px;
-    text-align: left;
+table {
+  th, tr, td {
+    vertical-align: middle;
     text-align: center;
   }
+}
+.mat-mdc-row {
+  transition: .3s;
+  &:hover {
+    background: #fff2d9;
+  }
+}
+.mat-mdc-paginator {
+  background-color: #c6d4ea;
+}
+.mat-mdc-header-cell, .mat-mdc-cell {
+  border-bottom: 1px solid rgb(126, 169, 193);
 }
