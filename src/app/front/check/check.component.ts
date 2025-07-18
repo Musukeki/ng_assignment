@@ -1,10 +1,10 @@
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UsersService } from './../../@services/users.service';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-check',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './check.component.html',
   styleUrl: './check.component.scss'
 })

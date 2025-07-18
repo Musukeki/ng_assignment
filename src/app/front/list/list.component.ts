@@ -46,8 +46,8 @@ export class ListComponent implements AfterViewInit {
 
     this.newData = new MatTableDataSource(filterArr);
 
-    console.log('原始資料', this.dataSource.data)
-    console.log('篩選後資料', this.newData.data)
+    //console.log('原始資料', this.dataSource.data)
+    //console.log('篩選後資料', this.newData.data)
   }
 
 }
