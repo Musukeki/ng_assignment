@@ -76,5 +76,6 @@ export class DialogComponent {
     ]
 
     // console.log(this.sourceDataService.sourceData)
+    console.log('服務資料', this.sourceDataService.sourceData)
   }
 }

@@ -31,7 +31,8 @@ export class BackListComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
+      this.refreshTable() // 配合 refreshTable()
     });
   }
 
@@ -57,7 +58,8 @@ export class BackListComponent {
 
     this.newData = new MatTableDataSource(filterArr);
 
-    // console.log('原始資料', this.dataSource.data)
+    console.log('服務資料', this.sourceDataService.sourceData)
+    console.log('原始資料', this.dataSource.data)
     console.log('篩選後資料', this.newData.data)
   }
 
@@ -73,8 +75,21 @@ export class BackListComponent {
     this.newData = new MatTableDataSource(filterArr);
     this.newData.paginator = this.paginator;
 
-    console.log('newData', this.newData.data)
+    console.log('服務資料', this.sourceDataService.sourceData)
+    console.log('原始資料', this.dataSource.data)
+    console.log('篩選後資料', this.newData.data)
+
+    // console.log('newData', this.newData.data)
     // console.log(this.sourceDataService.sourceData);
+  }
+
+  // 訂閱 同步渲染畫面
+  refreshTable() {
+    const rawData = this.sourceDataService.sourceData;
+    this.dataSource = new MatTableDataSource(rawData);
+    const filterArr = rawData.filter(i => i.status !== '尚未發布');
+    this.newData = new MatTableDataSource(filterArr);
+    this.newData.paginator = this.paginator;
   }
 }
 
