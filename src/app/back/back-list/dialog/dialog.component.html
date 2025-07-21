@@ -4,7 +4,7 @@
     <ul class="questAdd">
       <li>
         <span>問卷標題</span>
-        <input type="text" [(ngModel)]="addQuestData.questTitle">
+        <input type="text" style="width: 250px;" [(ngModel)]="addQuestData.questTitle">
       </li>
       <li>
         <span>問卷說明</span>
@@ -24,17 +24,6 @@
   <!-- 題型設定 -->
   <mat-tab label="題目設定">
     <div class="questSet">
-      <!-- <ul class="quesSetType">
-        <li>
-          <button>單選題</button>
-        </li>
-        <li>
-          <button>多選題</button>
-        </li>
-        <li>
-          <button>文字輸入題</button>
-        </li>
-      </ul> -->
 
       <div class="questSetOption">
         <ul>
@@ -71,33 +60,6 @@
             </tr>
           </thead>
           <tbody id="questSetListTbody">
-            <!-- <tr>
-              <td>
-                <input type="checkbox">
-              </td>
-              <td>平均一週喝幾杯咖啡</td>
-              <td>單選題</td>
-              <td>
-                <input type="checkbox">
-              </td>
-              <td>
-                <a>編輯</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <input type="checkbox">
-              </td>
-              <td>常喝的咖啡類型</td>
-              <td>單選題</td>
-              <td>
-                <input type="checkbox">
-              </td>
-              <td>
-                <a>編輯</a>
-              </td>
-            </tr> -->
 
             @if(addQuestData.questOptions[0].id == '' && addQuestData.questOptions.length == 1) {
 
@@ -134,5 +96,4 @@
   </mat-tab>
   <mat-tab label="問卷回饋">問卷回饋</mat-tab>
   <mat-tab label="統計">統計</mat-tab>
-  <mat-tab label="回列表">回列表</mat-tab>
 </mat-tab-group>
