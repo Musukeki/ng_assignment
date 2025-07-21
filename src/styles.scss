@@ -38,3 +38,10 @@ h1,h2,h3,h4,h5,h6 {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+  @include mat.tabs-overrides((
+    active-focus-indicator-color: orange,
+    active-focus-label-text-color: rgb(108, 122, 187),
+  ));
+}

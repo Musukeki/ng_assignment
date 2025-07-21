@@ -1,0 +1,138 @@
+<mat-tab-group class="custom-dialog" animationDuration="0">
+  <!-- 問卷題目 -->
+  <mat-tab label="問卷">
+    <ul class="questAdd">
+      <li>
+        <span>問卷標題</span>
+        <input type="text" [(ngModel)]="addQuestData.questTitle">
+      </li>
+      <li>
+        <span>問卷說明</span>
+        <textarea name="" rows="3" cols="40" [(ngModel)]="addQuestData.questDesc"></textarea>
+      </li>
+      <li>
+        <span>開始時間</span>
+        <input type="date" [(ngModel)]="addQuestData.startDate">
+      </li>
+      <li>
+        <span>結束時間</span>
+        <input type="date" [(ngModel)]="addQuestData.endDate">
+      </li>
+    </ul>
+  </mat-tab>
+
+  <!-- 題型設定 -->
+  <mat-tab label="題目設定">
+    <div class="questSet">
+      <!-- <ul class="quesSetType">
+        <li>
+          <button>單選題</button>
+        </li>
+        <li>
+          <button>多選題</button>
+        </li>
+        <li>
+          <button>文字輸入題</button>
+        </li>
+      </ul> -->
+
+      <div class="questSetOption">
+        <ul>
+          <li>
+            <span>問題內容</span>
+            <input type="text" style="width: 250px;" [(ngModel)]="addQuestData.addContent.optionContent">
+          </li>
+          <li>
+            <select name="" id="" [(ngModel)]="addQuestData.addContent.type">
+              <option value="single">單選題</option>
+              <option value="multiple">多選題</option>
+              <option value="text">文字輸入</option>
+            </select>
+          </li>
+          <li>
+            <span>是否必填</span>
+            <input type="checkbox" [(ngModel)]="addQuestData.addContent.isReqired">
+          </li>
+          <li>
+            <button (click)="addOption()">新增</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="questSetList">
+        <table>
+          <thead>
+            <tr>
+              <th width="5%"></th>
+              <th width="40%">提問內容</th>
+              <th width="20%">題目類型</th>
+              <th width="20%">是否必填</th>
+              <th width="15%">編輯</th>
+            </tr>
+          </thead>
+          <tbody id="questSetListTbody">
+            <!-- <tr>
+              <td>
+                <input type="checkbox">
+              </td>
+              <td>平均一週喝幾杯咖啡</td>
+              <td>單選題</td>
+              <td>
+                <input type="checkbox">
+              </td>
+              <td>
+                <a>編輯</a>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <input type="checkbox">
+              </td>
+              <td>常喝的咖啡類型</td>
+              <td>單選題</td>
+              <td>
+                <input type="checkbox">
+              </td>
+              <td>
+                <a>編輯</a>
+              </td>
+            </tr> -->
+
+            @if(addQuestData.questOptions[0].id == '' && addQuestData.questOptions.length == 1) {
+
+            } @else {
+              @for(option of addQuestData.questOptions; track $index; let i = $index) {
+                @if(i != 0) {
+                  <tr>
+                    <td>
+                      <input type="checkbox">
+                    </td>
+
+                    <td>{{ option.optionContent }}</td>
+                    <td>
+                      @if(option.type == 'single') { 單選題 }
+                      @else if(option.type == 'multiple') { 多選題 }
+                      @else if(option.type == 'text') { 文字內容 }
+                    </td>
+                    <td>
+                      @if(option.isReqired == true) { 是 }
+                      @else { 否 }
+                    </td>
+                    <td>編輯</td>
+                  </tr>
+                }
+              }
+            }
+        </table>
+
+        <div class="submitBtn">
+          <button (click)="submitBtn()">送出</button>
+        </div>
+      </div>
+  </div>
+  </mat-tab>
+  <mat-tab label="問卷回饋">問卷回饋</mat-tab>
+  <mat-tab label="統計">統計</mat-tab>
+  <mat-tab label="回列表">回列表</mat-tab>
+</mat-tab-group>

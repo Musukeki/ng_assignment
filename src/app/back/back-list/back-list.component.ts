@@ -1,15 +1,18 @@
 import { UsersService } from './../../@services/users.service';
 import { FormsModule } from '@angular/forms';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SourceDataService } from '../../@services/source-data.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogComponent } from './dialog/dialog.component';
 
 @Component({
   selector: 'app-back-list',
-  imports: [ FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink ],
+  imports: [ FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink, MatButtonModule, MatDialogModule ],
   templateUrl: './back-list.component.html',
   styleUrl: './back-list.component.scss'
 })
@@ -18,6 +21,19 @@ export class BackListComponent {
   // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   dataSource!: MatTableDataSource<PeriodicElement>;
 
+  readonly dialog = inject(MatDialog);
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '700px',
+      maxWidth: '700px',
+      panelClass: 'custom-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -58,7 +74,7 @@ export class BackListComponent {
     this.newData.paginator = this.paginator;
 
     // console.log(this.dataSource.data)
-    // console.log(this.sourceDataService.sourceData)
+    console.log(this.sourceDataService.sourceData)
   }
 }
 

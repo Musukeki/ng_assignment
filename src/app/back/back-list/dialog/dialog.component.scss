@@ -1,0 +1,60 @@
+mat-tab-group {
+  padding: 28px 28px 0;
+}
+.questAdd {
+  padding: 24px;
+  li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: start;
+  }
+  span {
+    margin-right: 12px;
+  }
+}
+.questSet {
+  padding: 24px;
+  .quesSetType {
+    display: flex;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #999;
+    li {
+      margin-right: 8px;
+    }
+  }
+  .questSetOption {
+    margin-bottom: 24px;
+    font-size: 14px;
+    border-bottom: 1px solid #999;
+    ul {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      li {
+        display: flex;
+        align-items: center;
+        span {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+  .questSetList {
+    table {
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 4px;
+    }
+    .submitBtn {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
