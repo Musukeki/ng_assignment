@@ -37,33 +37,24 @@ export class DialogComponent {
     ],
   }
 
+  // 新增問題選項
   addOption() {
-    // addQuestData.addContent 加入 id 屬性的新物件
+    // newOption 表示新增的題目並加入 id 屬性
     const newOption = {
       id: Math.floor(Math.random() * 10000000000).toString(),
       ...this.addQuestData.addContent
     };
 
-    // 將新物件 newOption 加入 addQuestData.questOptions 陣列中
+    // 每次新增都會將新增的題目 newOption 加入 addQuestData.questOptions 陣列中
     this.addQuestData = {
       ...this.addQuestData,
-      // questTitle: this.addQuestData.questTitle,
-      // questDesc: this.addQuestData.questDesc,
-      // startDate: this.addQuestData.startDate,
-      // endDate: this.addQuestData.endDate,
-      // addContent: {
-      //   ...this.addQuestData.addContent,
-      //   optionContent: '',
-      //   isReqired: false
-      // },
       questOptions: [...this.addQuestData.questOptions, newOption]
     };
-
     console.log(this.addQuestData);
   }
 
+  // 新增整份問卷
   submitBtn() {
-
     let getNumber = 0;
     if(this.sourceDataService.sourceData.length == 0) {
       getNumber = 0;
@@ -76,7 +67,7 @@ export class DialogComponent {
       {
         number: getNumber,
         name: this.addQuestData.questTitle,
-        status: '尚未開始',
+        status: '進行中',
         startDate: this.addQuestData.startDate,
         endDate: this.addQuestData.endDate,
         id: getNumber.toString(),
@@ -84,6 +75,6 @@ export class DialogComponent {
       }
     ]
 
-    console.log(this.sourceDataService.sourceData)
+    // console.log(this.sourceDataService.sourceData)
   }
 }

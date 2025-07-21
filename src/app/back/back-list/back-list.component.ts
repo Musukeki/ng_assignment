@@ -58,23 +58,23 @@ export class BackListComponent {
     this.newData = new MatTableDataSource(filterArr);
 
     // console.log('原始資料', this.dataSource.data)
-    // console.log('篩選後資料', this.newData.data)
-
-
+    console.log('篩選後資料', this.newData.data)
   }
 
   deleteData(): void {
-    // 先從 sourceData 過濾掉被選取的資料
-    this.dataSource.data = this.dataSource.data.filter(item => !item.checked);
-    let filterArr = this.dataSource.data.filter((i) => {
+    // 過濾掉被勾選的項目
+    this.sourceDataService.sourceData = this.sourceDataService.sourceData.filter(item => !item.checked);
+
+    // 更新 dataSource & newData
+    this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
+    const filterArr = this.sourceDataService.sourceData.filter((i) => {
       return i.status !== '尚未發布';
-    })
+    });
     this.newData = new MatTableDataSource(filterArr);
-    this.sourceDataService.sourceData = this.dataSource.data;
     this.newData.paginator = this.paginator;
 
-    // console.log(this.dataSource.data)
-    console.log(this.sourceDataService.sourceData)
+    console.log('newData', this.newData.data)
+    // console.log(this.sourceDataService.sourceData);
   }
 }
 
