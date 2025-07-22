@@ -7,11 +7,11 @@
     <ul class="loginList">
       <li class="loginAcc">
         <img src="/people.png" class="loginList_icon loginAcc_icon" alt="img_people">
-        <input type="email" placeholder="Email">
+        <input type="email" placeholder="Email" [(ngModel)]="testAccount">
       </li>
       <li class="loginPwd">
         <img src="/password.png" class="loginList_icon loginPwd_icon" alt="img_password">
-        <input type="password" placeholder="Password">
+        <input type="password" placeholder="Password" [(ngModel)]="testPassword">
         <img src="/eye_close.png" class="loginList_icon loginPwd_hide" style="cursor: pointer" alt="img_eye">
       </li>
 
@@ -29,7 +29,7 @@
         </ul>
       </li>
       <li>
-        <button class="loginBtn" routerLink="/front/list">Login</button>
+        <button class="loginBtn" (click)="login()">Login</button>
       </li>
       <li class="loginCreate"><a href="###">Create Account</a></li>
     </ul>

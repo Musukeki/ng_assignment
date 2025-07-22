@@ -13,15 +13,16 @@ html {
     typography: Roboto,
     density: 0,
   ));
-}@import url('reset.scss');
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+}
+@import url('reset.scss');
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 *,*::before,::after {
   box-sizing: border-box;
   line-height: 1.25;
 }
 body {
-  font-family: "Work Sans", sans-serif;
+  font-family: "Work Sans", "LXGW WenKai Mono TC", sans-serif;
 }
 a {
   text-decoration: none;
@@ -36,8 +37,9 @@ h1,h2,h3,h4,h5,h6 {
   margin: 0;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
 
 :root {
   @include mat.tabs-overrides((
