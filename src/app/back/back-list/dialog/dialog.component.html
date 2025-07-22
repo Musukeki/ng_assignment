@@ -32,7 +32,7 @@
             <input type="text" style="width: 220px;" [(ngModel)]="addQuestData.addContent.optionContent">
           </li>
           <li>
-            <select name="" id="" [(ngModel)]="addQuestData.addContent.type">
+            <select [(ngModel)]="addQuestData.addContent.type" (change)="onTypeChange()">
               <option value="single">單選題</option>
               <option value="multiple">多選題</option>
               <option value="text">文字輸入</option>
@@ -43,28 +43,58 @@
             <input type="checkbox" [(ngModel)]="addQuestData.addContent.isReqired">
           </li>
           <li>
-            <button style="margin-right: 4px;" (click)="addOption()">加入選項</button>
+            <button (click)="addQuestItem()">新增</button>
           </li>
         </ul>
 
         <div class="addOptionWrap">
-          <ul class="addOption">
-            <li>
-              <input type="text" style="width: 180px;">
-            </li>
-            <li>
-              <input type="text" style="width: 180px;">
-            </li>
-            <li>
-              <input type="text" style="width: 180px;">
-            </li>
-            <li>
-              <input type="text" style="width: 180px;">
-            </li>
-          </ul>
+
+          <div class="addOptionContent" [ngSwitch]="addQuestData.addContent.type">
+
+            <!-- 單選題 -->
+            <div *ngSwitchCase="'single'">
+              <p style="margin-bottom: 8px;">單選題選項設定</p>
+
+              <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId" class="option">
+                <input
+                  type="text"
+                  placeholder="輸入選項"
+                  [(ngModel)]="option.value"
+                />
+                <button (click)="removeOption(i)" class="delBtn">刪除</button>
+              </div>
+
+            </div>
+
+            <!-- 多選題 -->
+            <div *ngSwitchCase="'multiple'" class="option">
+              <p style="margin-bottom: 8px;">多選題選項設定</p>
+              <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId" class="option">
+                <input
+                  type="text"
+                  placeholder="輸入選項"
+                  [(ngModel)]="option.value"
+                />
+                <button (click)="removeOption(i)" class="delBtn">刪除</button>
+              </div>
+
+            </div>
+
+            <!-- 文字輸入 -->
+            <div *ngSwitchCase="'text'">
+
+            </div>
+
+            <div *ngSwitchDefault>
+              <p>請選擇題目類型</p>
+            </div>
+
+          </div>
+
+
 
           <div>
-            <button (click)="addQuestItem()">新增</button>
+            <button (click)="addOption()">加入選項</button>
           </div>
         </div>
       </div>
@@ -115,6 +145,6 @@
       </div>
   </div>
   </mat-tab>
-  <mat-tab label="問卷回饋">問卷回饋</mat-tab>
-  <mat-tab label="統計">統計</mat-tab>
+  <!-- <mat-tab label="問卷回饋">問卷回饋</mat-tab> -->
+  <!-- <mat-tab label="統計">統計</mat-tab> -->
 </mat-tab-group>

@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dialog',
-  imports: [ MatButtonModule, MatDialogModule, MatTabsModule, FormsModule ],
+  imports: [ MatButtonModule, MatDialogModule, MatTabsModule, FormsModule, CommonModule ],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,8 +25,12 @@ export class DialogComponent {
     endDate: '',
     addContent: {
       optionContent: '',
-      type: '',
+      type: 'single',
       isReqired: false,
+      options: [
+        { id: Date.now(), value: '' },
+        { id: Date.now() + 1, value: '' }
+      ]
     },
     questOptions: [
       {
@@ -39,22 +44,44 @@ export class DialogComponent {
 
   // 新增問題選項
   addOption() {
-    console.log(this.addQuestData)
+    const newId = Date.now() + Math.floor(Math.random() * 1000); // 確保唯一id
+    this.addQuestData.addContent.options.push({ id: newId, value: '' });
+    // console.log(this.addQuestData);
   }
 
   // 新增問題
   addQuestItem() {
-    // newOption 表示新增的題目並加入 id 屬性
+    const content = this.addQuestData.addContent;
+
+    if (content.type === 'single' || content.type === 'multiple') {
+      if (!content.options || content.options.length === 0) {
+        alert('請先新增選項');
+        return;
+      }
+    }
+
+    // 新增題目（文字輸入題無 options）
     const newOption = {
       id: Math.floor(Math.random() * 10000000000).toString(),
-      ...this.addQuestData.addContent
+      optionContent: content.optionContent,
+      type: content.type,
+      isReqired: content.isReqired,
+      options: content.type === 'text' ? [] : content.options
     };
 
-    // 每次新增都會將新增的題目 newOption 加入 addQuestData.questOptions 陣列中
-    this.addQuestData = {
-      ...this.addQuestData,
-      questOptions: [...this.addQuestData.questOptions, newOption]
+    this.addQuestData.questOptions = [...this.addQuestData.questOptions, newOption];
+
+    // 新增完題目後清空 addContent（type 保留空字串，下一題再選）
+    this.addQuestData.addContent = {
+      optionContent: '',
+      type: 'single',
+      isReqired: false,
+      options: [
+        { id: Date.now(), value: '' },
+        { id: Date.now() + 1, value: '' }
+      ]
     };
+
     console.log(this.addQuestData);
   }
 
@@ -83,4 +110,38 @@ export class DialogComponent {
     // console.log(this.sourceDataService.sourceData)
     console.log('服務資料', this.sourceDataService.sourceData)
   }
+
+  removeOption(index: number) {
+    this.addQuestData.addContent.options.splice(index, 1);
+  }
+
+  trackByOptionId(index: number, item: { id: number, value: string }) {
+    return item.id;
+  }
+
+  onTypeChange() {
+    const currentType = this.addQuestData.addContent.type;
+
+    if (currentType === 'single' || currentType === 'multiple') {
+      // 切換到單選或多選，預設兩個空選項
+      this.addQuestData.addContent = {
+        optionContent: '',
+        type: currentType,
+        isReqired: false,
+        options: [
+          { id: Date.now(), value: '' },
+          { id: Date.now() + 1, value: '' }
+        ]
+      };
+    } else {
+      // 切換到文字輸入等類型，清空選項
+      this.addQuestData.addContent = {
+        optionContent: '',
+        type: currentType,
+        isReqired: false,
+        options: []
+      };
+    }
+  }
+
 }
