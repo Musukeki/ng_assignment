@@ -4,18 +4,20 @@
   <ul class="topbar">
     <li>
       <p>問卷名稱</p>
-      <input placeholder="請輸入問券名稱關鍵字" [(ngModel)]="inputContent">
+      <input placeholder="請輸入問券名稱關鍵字" [(ngModel)]="inputContent" (ngModelChange)="searchByFilters()">
     </li>
     <li>
       <div>
         <p>開始時間</p>
-        <input type="date">
+        <input type="date" [(ngModel)]="filterStartDate">
       </div>
       <div>
         <p>結束時間</p>
-        <input type="date">
+        <input type="date" [(ngModel)]="filterEndDate">
       </div>
-      <button class="inputBtn">搜尋</button>
+      <button (click)="searchByFilters()">搜尋</button>
+      <button class="inputBtn" (click)="clearFilters()">清除</button>
+
     </li>
   </ul>
 
@@ -76,7 +78,4 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
-
-
-  <!-- </div> -->
 </div>

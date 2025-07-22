@@ -14,12 +14,19 @@ import { DialogComponent } from './dialog/dialog.component';
   selector: 'app-back-list',
   imports: [ FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink, MatButtonModule, MatDialogModule ],
   templateUrl: './back-list.component.html',
-  styleUrl: './back-list.component.scss'
+  styleUrl: './back-list.component.scss',
+  providers: [
+      { provide: MatPaginatorIntl, useValue: getCustomPaginatorIntl() }
+    ]
 })
 export class BackListComponent {
   displayedColumns: string[] = ['選取操作', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
   // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   dataSource!: MatTableDataSource<PeriodicElement>;
+
+  filterStartDate!: string;
+  filterEndDate!: string;
+
 
   readonly dialog = inject(MatDialog);
 
@@ -58,6 +65,8 @@ export class BackListComponent {
 
     this.newData = new MatTableDataSource(filterArr);
 
+    this.inputContent = '';
+
     console.log('服務資料', this.sourceDataService.sourceData)
     console.log('原始資料', this.dataSource.data)
     console.log('篩選後資料', this.newData.data)
@@ -91,6 +100,66 @@ export class BackListComponent {
     this.newData = new MatTableDataSource(filterArr);
     this.newData.paginator = this.paginator;
   }
+
+  searchByName(): void {
+    const keyword = this.inputContent?.trim().toLowerCase() || '';
+
+    let filtered = this.sourceDataService.sourceData.filter(item => item.status !== '尚未發布');
+
+    if (keyword !== '') {
+      filtered = filtered.filter(item => item.name.toLowerCase().includes(keyword));
+    }
+    this.newData = new MatTableDataSource(filtered);
+    this.newData.paginator = this.paginator;
+  }
+
+  searchByFilters(): void {
+    const keyword = this.inputContent?.trim().toLowerCase() || '';
+    const start = this.filterStartDate;
+    const end = this.filterEndDate;
+
+    // 先排除 '尚未發布'
+    let filtered = this.sourceDataService.sourceData.filter(item => item.status !== '尚未發布');
+
+    // 關鍵字搜尋
+    if (keyword !== '') {
+      filtered = filtered.filter(item => item.name.toLowerCase().includes(keyword));
+    }
+
+    // 日期格式轉換 helper
+    const formatDate = (dateStr: string): string => {
+      return dateStr.replaceAll('/', '-'); // 將 yyyy/MM/dd 轉成 yyyy-MM-dd
+    }
+
+    // 日期篩選
+    if (start) {
+      filtered = filtered.filter(item => formatDate(item.startDate) >= start);
+    }
+
+    if (end) {
+      filtered = filtered.filter(item => formatDate(item.endDate) <= end);
+    }
+
+    // 更新資料並套用分頁
+    this.newData = new MatTableDataSource(filtered);
+    this.newData.paginator = this.paginator;
+  }
+
+  // 清除按鈕
+  clearFilters(): void {
+    // 清空輸入欄位內容
+    this.inputContent = '';
+    this.filterStartDate = '';
+    this.filterEndDate = '';
+
+    // 重設資料（即重新顯示所有非「尚未發布」的資料）
+    const rawData = this.sourceDataService.sourceData;
+    const filtered = rawData.filter(i => i.status !== '尚未發布');
+
+    this.newData = new MatTableDataSource(filtered);
+    this.newData.paginator = this.paginator;
+  }
+
 }
 
 export interface PeriodicElement {
