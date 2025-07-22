@@ -26,10 +26,10 @@
     <div class="questSet">
 
       <div class="questSetOption">
-        <ul>
+        <ul class="addItem">
           <li>
             <span>問題內容</span>
-            <input type="text" style="width: 250px;" [(ngModel)]="addQuestData.addContent.optionContent">
+            <input type="text" style="width: 220px;" [(ngModel)]="addQuestData.addContent.optionContent">
           </li>
           <li>
             <select name="" id="" [(ngModel)]="addQuestData.addContent.type">
@@ -43,9 +43,30 @@
             <input type="checkbox" [(ngModel)]="addQuestData.addContent.isReqired">
           </li>
           <li>
-            <button (click)="addOption()">新增</button>
+            <button style="margin-right: 4px;" (click)="addOption()">加入選項</button>
           </li>
         </ul>
+
+        <div class="addOptionWrap">
+          <ul class="addOption">
+            <li>
+              <input type="text" style="width: 180px;">
+            </li>
+            <li>
+              <input type="text" style="width: 180px;">
+            </li>
+            <li>
+              <input type="text" style="width: 180px;">
+            </li>
+            <li>
+              <input type="text" style="width: 180px;">
+            </li>
+          </ul>
+
+          <div>
+            <button (click)="addQuestItem()">新增</button>
+          </div>
+        </div>
       </div>
 
       <div class="questSetList">

@@ -39,6 +39,11 @@ export class DialogComponent {
 
   // 新增問題選項
   addOption() {
+    console.log(this.addQuestData)
+  }
+
+  // 新增問題
+  addQuestItem() {
     // newOption 表示新增的題目並加入 id 屬性
     const newOption = {
       id: Math.floor(Math.random() * 10000000000).toString(),

@@ -27,7 +27,7 @@ mat-tab-group {
     margin-bottom: 24px;
     font-size: 14px;
     border-bottom: 1px solid #999;
-    ul {
+    .addItem {
       display: flex;
       justify-content: space-between;
       padding-bottom: 24px;
@@ -37,6 +37,22 @@ mat-tab-group {
         span {
           margin-right: 8px;
         }
+      }
+    }
+    .addOptionWrap {
+      padding-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .addOption {
+      list-style: decimal;
+      padding-left: 24px;
+      li {
+        margin-bottom: 4px;
+      }
+      li:last-child {
+        margin-bottom: 0;
       }
     }
   }
