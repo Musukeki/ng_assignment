@@ -17,17 +17,20 @@ import { SourceDataService } from '../../@services/source-data.service';
   ]
 })
 
-
 export class ListComponent implements AfterViewInit {
   displayedColumns: string[] = ['編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
   // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   dataSource!: MatTableDataSource<PeriodicElement>;
 
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   inputContent!: string;
   newData!: MatTableDataSource<PeriodicElement>; // 不含狀態為'尚未發布'的新資料內容，類型不能是 Array，否則無法觸發換頁功能
+
+  // 日期搜尋變數
+  originalData!: PeriodicElement[];
+  startDateFilter!: string; // 綁定開始日期字串 (yyyy-MM-dd)
+  endDateFilter!: string;   // 綁定結束日期字串 (yyyy-MM-dd)
 
   constructor(private sourceDataService: SourceDataService) {}
 
@@ -46,8 +49,70 @@ export class ListComponent implements AfterViewInit {
 
     this.newData = new MatTableDataSource(filterArr);
 
+    this.originalData = filterArr;
+
     //console.log('原始資料', this.dataSource.data)
     //console.log('篩選後資料', this.newData.data)
+
+    // 搜尋行為設定
+    this.newData.filterPredicate = (data: PeriodicElement, filter: string) => {
+      return data.name.toLowerCase().includes(filter);
+    };
+  }
+
+  // 即時搜尋
+  applyFilter(filterValue: string) {
+    this.newData.filter = filterValue.trim().toLowerCase();
+  }
+
+  // 日期搜尋
+  dateSearch() {
+    const keyword = this.inputContent?.trim() ?? '';
+
+    // 將 startDateFilter, endDateFilter 字串轉成 Date，方便比較
+    const startFilterDate = this.startDateFilter ? new Date(this.startDateFilter) : null;
+    const endFilterDate = this.endDateFilter ? new Date(this.endDateFilter) : null;
+
+    // 篩選邏輯
+    const filtered = this.originalData.filter((item: PeriodicElement) => {
+      const itemStartDate = new Date(item.startDate);
+      const itemEndDate = new Date(item.endDate);
+
+      // 日期區間判斷（符合開始時間與結束時間都要符合）
+      const dateMatch = (
+        (!startFilterDate || itemStartDate >= startFilterDate) &&
+        (!endFilterDate || itemEndDate <= endFilterDate)
+      );
+
+      // 文字關鍵字判斷（名稱包含輸入文字）
+      const keywordMatch = keyword ? item.name.includes(keyword) : true;
+
+      return dateMatch && keywordMatch;
+    });
+
+    this.newData.data = filtered;
+  }
+
+  // 清除搜尋欄位
+  clearFilters() {
+    // 清空搜尋條件
+    this.inputContent = '';
+    this.startDateFilter = '';
+    this.endDateFilter = '';
+
+    // 還原原始資料
+    this.newData = new MatTableDataSource<PeriodicElement>([...this.originalData]);
+
+    // 重新綁定 paginator
+    this.newData.paginator = this.paginator;
+
+    // 重設搜尋條件行為（name 關鍵字）
+    this.newData.filterPredicate = (data: PeriodicElement, filter: string) => {
+      return data.name.toLowerCase().includes(filter);
+    };
+
+    // 強制更新資料表
+    this.newData._updateChangeSubscription();
   }
 
 }
