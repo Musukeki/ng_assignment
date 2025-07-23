@@ -94,7 +94,7 @@
 
 
           <div>
-            <button (click)="addOption()">加入選項</button>
+            <button *ngIf="addQuestData.addContent.type !== 'text'" (click)="addOption()">加入選項</button>
           </div>
         </div>
       </div>

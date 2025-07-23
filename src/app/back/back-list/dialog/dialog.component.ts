@@ -2,7 +2,7 @@ import { SourceDataService } from './../../../@services/source-data.service';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 
@@ -15,7 +15,10 @@ import { CommonModule } from '@angular/common';
 })
 export class DialogComponent {
 
-  constructor(private sourceDataService: SourceDataService) {}
+  constructor(
+    private sourceDataService: SourceDataService,
+    private dialogRef: MatDialogRef<DialogComponent>
+  ) {}
 
   // 新增問卷內容
   addQuestData = {
@@ -106,9 +109,10 @@ export class DialogComponent {
         checked: false
       }
     ]
+    console.log('服務資料', this.sourceDataService.sourceData)
+    this.dialogRef.close();
 
     // console.log(this.sourceDataService.sourceData)
-    console.log('服務資料', this.sourceDataService.sourceData)
   }
 
   removeOption(index: number) {
