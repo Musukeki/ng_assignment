@@ -13,7 +13,7 @@ export class SourceDataService {
     { number: 4, name: '最看不順眼的主管', status: '尚未發布', startDate: '2025-07-20', endDate: '2025-07-26', id: '4', checked: false },
     { number: 5, name: '平台使用習慣', status: '進行中', startDate: '2025-07-13', endDate: '2025-07-19', id: '5', checked: false },
     { number: 6, name: '內部溝通與協作評估問卷', status: '進行中', startDate: '2025-07-13', endDate: '2025-07-19', id: '6', checked: false },
-    { number: 7, name: 'AA制統計調查', status: '已結束', startDate: '2025-07-10', endDate: '2025-07-16', id: '7', checked: false }
+    { number: 7, name: 'AA制意見調查', status: '已結束', startDate: '2025-07-10', endDate: '2025-07-16', id: '7', checked: false }
   ];
 
   constructor() { }
