@@ -1,10 +1,11 @@
 import { Router, RouterLink } from '@angular/router';
 import { UsersService } from './../../@services/users.service';
 import { Component } from '@angular/core';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-check',
-  imports: [RouterLink],
+  imports: [RouterLink, MenuComponent],
   templateUrl: './check.component.html',
   styleUrl: './check.component.scss'
 })

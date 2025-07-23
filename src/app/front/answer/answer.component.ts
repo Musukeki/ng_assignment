@@ -3,10 +3,11 @@ import { Router, RouterLink } from '@angular/router';
 import { UsersService } from './../../@services/users.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-answer',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, MenuComponent],
   templateUrl: './answer.component.html',
   styleUrl: './answer.component.scss'
 })

@@ -6,6 +6,7 @@ import { CheckComponent } from './front/check/check.component';
 import { StatisticalComponent } from './front/statistical/statistical.component';
 import { BackListComponent } from './back/back-list/back-list.component';
 import { DialogComponent } from './back/back-list/dialog/dialog.component';
+import { MenuComponent } from './menu/menu.component';
 
 export const routes: Routes = [
   { path: 'front/list', component: ListComponent },
@@ -18,5 +19,6 @@ export const routes: Routes = [
     children: [
       { path: 'back/backList/dialog', component: DialogComponent }
     ]
-  }
+  },
+  { path: 'menu', component: MenuComponent } // 測試
 ];

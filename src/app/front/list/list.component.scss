@@ -1,3 +1,35 @@
+// 測試用列表--------
+app-menu {
+  position: fixed;
+  right: 0;
+  top: 0;
+  background: #578FCA;
+  cursor: pointer;
+
+  width: 100px;
+  height: 75px;
+
+  clip-path: polygon(
+    0% 0%,       /* 頂點 */
+    100% 0%,     /* 右上 */
+    100% 100%,     /* 右下 */
+  );
+
+  transition: .3s;
+
+  &:hover {
+    width: 200px;
+    height: 75px;
+    clip-path: polygon(
+      0% 0%,       /* 頂點 */
+      100% 0%,     /* 右上 */
+      100% 100%,     /* 右下 */
+    );
+  }
+}
+// --------
+
+
 .container {
   max-width: 768px;
   margin: 0 auto;

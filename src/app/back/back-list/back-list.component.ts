@@ -9,10 +9,11 @@ import { SourceDataService } from '../../@services/source-data.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-back-list',
-  imports: [ FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink, MatButtonModule, MatDialogModule ],
+  imports: [FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink, MatButtonModule, MatDialogModule, MenuComponent],
   templateUrl: './back-list.component.html',
   styleUrl: './back-list.component.scss',
   providers: [

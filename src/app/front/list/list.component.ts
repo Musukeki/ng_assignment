@@ -5,10 +5,11 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SourceDataService } from '../../@services/source-data.service';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-list',
-  imports: [ FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink ],
+  imports: [FormsModule, MatTableModule, MatPaginatorModule, CommonModule, RouterLink, MenuComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
   standalone: true, // Angular 17+ 要加上否則 @if 會有問題

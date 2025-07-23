@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 // import Chart from 'chart.js/auto';
 import Chart, { ChartConfiguration } from 'chart.js/auto';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-statistical',
-  imports: [],
+  imports: [MenuComponent],
   templateUrl: './statistical.component.html',
   styleUrl: './statistical.component.scss'
 })
