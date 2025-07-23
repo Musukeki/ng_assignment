@@ -43,7 +43,7 @@
             <input type="checkbox" [(ngModel)]="addQuestData.addContent.isReqired">
           </li>
           <li>
-            <button (click)="addQuestItem()">新增</button>
+            <button (click)="addQuestItem()" class="addBtn" style="border: 1px solid #3e8d6c; color: #fff; background-color: #3e8d6c; line-height: 1.5; border-radius: 4px;">新增問題</button>
           </li>
         </ul>
 
@@ -53,12 +53,12 @@
 
             <!-- 單選題 -->
             <div *ngSwitchCase="'single'">
-              <p style="margin-bottom: 8px;">單選題選項設定</p>
+              <p style="margin-bottom: 8px;">單選 問題選項</p>
 
               <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId" class="option">
                 <input
                   type="text"
-                  placeholder="輸入選項"
+                  placeholder="輸入選項內容"
                   [(ngModel)]="option.value"
                 />
                 <button (click)="removeOption(i)" class="delBtn">刪除</button>
@@ -68,11 +68,11 @@
 
             <!-- 多選題 -->
             <div *ngSwitchCase="'multiple'" class="option">
-              <p style="margin-bottom: 8px;">多選題選項設定</p>
+              <p style="margin-bottom: 8px;">多選 問題選項</p>
               <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId" class="option">
                 <input
                   type="text"
-                  placeholder="輸入選項"
+                  placeholder="輸入選項內容"
                   [(ngModel)]="option.value"
                 />
                 <button (click)="removeOption(i)" class="delBtn">刪除</button>

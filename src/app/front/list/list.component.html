@@ -35,7 +35,7 @@
       <ng-container matColumnDef="名稱">
         <th mat-header-cell *matHeaderCellDef> 名稱 </th>
         <td mat-cell *matCellDef="let element">
-          <a *ngIf="element.status == '進行中'" routerLink="/front/answer" style="color: rgb(143, 112, 202);">{{ element.name }}</a>
+          <a *ngIf="element.status == '進行中'" routerLink="/front/answer" style="color: #6192c6;">{{ element.name }}</a>
           <span *ngIf="element.status != '進行中'">{{ element.name }}</span>
         </td>
 

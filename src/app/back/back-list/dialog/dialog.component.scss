@@ -78,7 +78,18 @@ mat-tab-group {
   .option {
     margin-bottom: 4px;
   }
+
   .delBtn {
     margin-left: 4px;
+    border: 1px solid #AF3E3E;
+    color: #AF3E3E;
+    background-color: #fff;
+    line-height: 1.5;
+    border-radius: 4px;
+    transition: .1s;
+    &:hover {
+      color: #fff;
+      background-color: #AF3E3E;
+    }
   }
 }
