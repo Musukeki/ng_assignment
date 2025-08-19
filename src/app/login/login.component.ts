@@ -20,6 +20,7 @@ export class LoginComponent {
   account!: string;
   password!: string;
   rememberMe: boolean = false;
+  showPassword: boolean = false;
 
   constructor(private router: Router, //
     private httpClientService: HttpClientService) { }
@@ -33,6 +34,10 @@ export class LoginComponent {
   }
   toggleRememberMe(): void {
     this.rememberMe = !this.rememberMe;
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
   }
 
   login() {

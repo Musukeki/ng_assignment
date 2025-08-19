@@ -11,8 +11,18 @@
       </li>
       <li class="loginPwd">
         <img src="/password.png" class="loginList_icon loginPwd_icon" alt="img_password">
-        <input type="password" placeholder="Password" [(ngModel)]="password">
-        <img src="/eye_close.png" class="loginList_icon loginPwd_hide" style="cursor: pointer" alt="img_eye">
+        <input
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder="Password"
+        [(ngModel)]="password"
+      >
+      <img
+      [src]="showPassword ? '/eye.png' : '/eye_close.png'"
+      class="loginList_icon loginPwd_hide"
+      (click)="toggleShowPassword()"
+      style="cursor: pointer"
+      alt="img_eye"
+    >
       </li>
 
       <li>
