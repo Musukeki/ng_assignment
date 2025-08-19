@@ -19,30 +19,48 @@ export class LoginComponent {
 
   account!: string;
   password!: string;
+  rememberMe: boolean = false;
 
   constructor(private router: Router, //
-              private httpClientService: HttpClientService) { }
+    private httpClientService: HttpClientService) { }
+
+  ngOnInit(): void {
+    const savedEmail = localStorage.getItem('rememberedAccount');
+    if (savedEmail) {
+      this.account = savedEmail;
+      this.rememberMe = true;
+    }
+  }
+  toggleRememberMe(): void {
+    this.rememberMe = !this.rememberMe;
+  }
 
   login() {
     let apiUrl = `http://localhost:8080/user/login`;
 
-      const postData = {
-        email: this.account,
-        password: this.password
-      };
-      this.httpClientService.postApi(apiUrl, postData).subscribe((res: any) => {
+    const postData = {
+      email: this.account,
+      password: this.password
+    };
+    this.httpClientService.postApi(apiUrl, postData).subscribe((res: any) => {
 
-        console.log(res);
-        // alert(res.code + res.message)
+      console.log(res);
+      // alert(res.code + res.message)
 
-        if(res.code == 200) {
-          alert("登入成功")
-          this.router.navigateByUrl("front/list");
-
+      if (res.code == 200) {
+        alert("登入成功")
+        // 記住帳號
+        if (this.rememberMe) {
+          localStorage.setItem('rememberedAccount', this.account);
         } else {
-          alert("帳號或密碼錯誤")
+          localStorage.removeItem('rememberedAccount');
         }
-      })
+        this.router.navigateByUrl("front/list");
+
+      } else {
+        alert("帳號或密碼錯誤")
+      }
+    })
 
   }
 

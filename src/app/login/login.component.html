@@ -17,14 +17,14 @@
 
       <li>
         <ul class="loginLink">
-          <li class="loginLink_remember">
-            <div class="toggleBtn">
+          <li class="loginLink_remember" (click)="toggleRememberMe()">
+            <div class="toggleBtn" [class.active]="rememberMe">
               <div class="toggleBtn_inner"></div>
             </div>
-            <a href="###">remember me</a>
+            <a>remember me</a>
           </li>
           <li class="loginLink_forgot">
-            <a href="###">forgot password</a>
+            <a style="pointer-events: none;">forgot password</a>
           </li>
         </ul>
       </li>

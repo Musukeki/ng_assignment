@@ -118,10 +118,10 @@
     .toggleBtn {
       width: 30px;
       height: 15px;
-      background-color: #1164b1;
+      background-color: #aeddff;
       border-radius: 100px;
       margin-right: 8px;
-      padding: 0 2px;
+      padding: 0 2.5px;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -131,6 +131,14 @@
         height: 10px;
         background-color: #fff;
         border-radius: 100px;
+      }
+    }
+    .toggleBtn.active {
+      background-color: #1164b1;
+
+      .toggleBtn_inner {
+        transform: translateX(15px);
+        transition: transform 0.2s ease;
       }
     }
   }
