@@ -16,8 +16,8 @@ export class AppComponent {
   ngOnInit(): void {}
 
 
-  // 確認用待刪除
-  checkTo(url: string) {
-    this.router.navigate([url])
-  }
+  // // 確認用待刪除
+  // checkTo(url: string) {
+  //   this.router.navigate([url])
+  // }
 }

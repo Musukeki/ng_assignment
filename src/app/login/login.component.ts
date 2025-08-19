@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClientService } from '../@http-clinet/http-clinet.service';
 
 @Component({
   selector: 'app-login',
@@ -16,18 +17,33 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
 
-  testAccount!: string;
-  testPassword!: string;
+  account!: string;
+  password!: string;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, //
+              private httpClientService: HttpClientService) { }
 
   login() {
-    if (this.testAccount === '001' && this.testPassword === '001') {
-      this.router.navigate(['/front/list']);
-    } else if (this.testAccount === '000' && this.testPassword === '000') {
-      this.router.navigate(['/back/backList']);
-    } else {
-      alert('F:001/001&B:000/000')
-    }
+    let apiUrl = `http://localhost:8080/user/login`;
+
+      const postData = {
+        email: this.account,
+        password: this.password
+      };
+      this.httpClientService.postApi(apiUrl, postData).subscribe((res: any) => {
+
+        console.log(res);
+        // alert(res.code + res.message)
+
+        if(res.code == 200) {
+          alert("登入成功")
+          this.router.navigateByUrl("front/list");
+
+        } else {
+          alert("帳號或密碼錯誤")
+        }
+      })
+
   }
+
 }
