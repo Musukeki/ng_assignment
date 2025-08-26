@@ -7,6 +7,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { HttpClientService } from '../../../@http-clinet/http-clinet.service';
 import { DialogModule } from "@angular/cdk/dialog";
+import { Router, RouterLink } from '@angular/router';
+
+
 
 // 若 OnPush 下覺得提示沒即時更新，可另外：
 // import { ChangeDetectorRef } from '@angular/core';
@@ -42,10 +45,9 @@ interface AddQuestData {
 
 
 
-
 @Component({
   selector: 'app-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatTabsModule, FormsModule, CommonModule, DialogModule],
+  imports: [MatButtonModule, MatDialogModule, MatTabsModule, FormsModule, CommonModule, DialogModule, RouterLink],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,7 +60,8 @@ export class DialogComponent {
   constructor(
     private sourceDataService: SourceDataService,
     private dialogRef: MatDialogRef<DialogComponent>,
-    private httpClientService: HttpClientService
+    private httpClientService: HttpClientService,
+    private router: Router
   ) { }
 
   // 新增問卷內容
@@ -421,6 +424,24 @@ onEndDateChange() {
     return true;
   }
 
+  openPreviewInNewTab() {
+    // 產 route
+    const tree = this.router.createUrlTree(['/back/backPreview']);
+    const url  = this.router.serializeUrl(tree);
+    // 轉成絕對網址（避免 baseHref/相對路徑問題）
+    const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
+
+    // 比較不會被瀏覽器當成 popup 的流程
+    const win = window.open('', '_blank'); // 先開空白分頁（點擊同步觸發）
+    if (!win) {
+      alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗。');
+      // 後援方案：同分頁導到預覽
+      this.router.navigateByUrl('/back/backPreview');
+      return;
+    }
+    win.opener = null;        // 安全
+    win.location.href = abs;  // 導到真正的預覽頁
+  }
 
 
 
