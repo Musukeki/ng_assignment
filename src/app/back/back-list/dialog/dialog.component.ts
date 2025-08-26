@@ -108,6 +108,7 @@ export class DialogComponent {
   showBasicTip = false;  // 是否顯示右下角提示
   editingIndex: number | null = null;
 
+
   trackByOptionId = (_index: number, item: { id?: number | string } | null | undefined) =>
     item?.id ?? _index;
 
@@ -186,6 +187,21 @@ export class DialogComponent {
 
 
   submitBtn1() {
+    // 先檢查基本資料是否完成（可選，但很實用）
+    if (!this.isBasicFilled()) {
+      this.showBasicTip = true;
+      this.selectedIndex = 0; // 帶回基本資料分頁
+      alert('請先完成問卷基本資料');
+      return;
+    }
+
+    // ★ 關鍵：沒有任何題目時阻止送出並提示
+    if (!this.addQuestData.questOptions || this.addQuestData.questOptions.length === 0) {
+      this.selectedIndex = 1; // 切到題目設定分頁
+      alert('尚未加入任何問題');
+      return;
+    }
+
     const apiUrl = `http://localhost:8080/quiz/create`;
 
     // 把前端題目轉成後端 QuestionVo 需要的格式
@@ -199,14 +215,13 @@ export class DialogComponent {
               .filter(s => s.length > 0));
 
       return {
-        questionId: idx + 1,               // ★ 只用順序，不用前端的隨機 id
+        questionId: idx + 1,               // 只用順序編號
         question: q.optionContent ?? '',
         type: typeUpper,
         required: !!q.isReqired,
         options: optionTexts
       };
     });
-
 
     const postData = {
       name: this.addQuestData.questTitle ?? '',
@@ -227,10 +242,51 @@ export class DialogComponent {
       error: (err) => {
         console.error('建立失敗:', err?.error || err);
         // 若還是 400，請確認：單/多選有沒有輸入選項文字？type 是否是 SINGLE/MULTIPLE/TEXT？
-        // 也可把 Network 面板 Response 的完整錯誤字串貼上，我幫你精準對應。
       }
     });
   }
+
+
+  // 產生今天（本地時區）的 YYYY-MM-DD 字串，避免時區造成 off-by-one
+todayStr: string = this.toDateInputValue(new Date());
+
+// 結束時間的最小可選日：max(開始時間, 今天)
+get endMinStr(): string {
+  const s = this.addQuestData.startDate || '';
+  return s && s > this.todayStr ? s : this.todayStr;
+}
+
+// 供 <input type="date"> 用的日期字串
+private toDateInputValue(d: Date): string {
+  const off = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0, 10);
+}
+
+// 使用者變更「開始時間」時觸發
+onStartDateChange() {
+  const s = this.addQuestData.startDate;
+  // 不得早於今天
+  if (s && s < this.todayStr) {
+    this.addQuestData.startDate = this.todayStr;
+  }
+  // 讓結束時間維持 >= 開始時間（若已選結束時間且比開始時間小，就自動調整）
+  const endMin = this.endMinStr;
+  if (this.addQuestData.endDate && this.addQuestData.endDate < endMin) {
+    this.addQuestData.endDate = endMin;
+  }
+}
+
+// 使用者變更「結束時間」時觸發
+onEndDateChange() {
+  const endMin = this.endMinStr;
+  const e = this.addQuestData.endDate;
+  // 不得早於 endMin（= max(開始時間, 今天)）
+  if (e && e < endMin) {
+    this.addQuestData.endDate = endMin;
+  }
+}
+
 
 
   // 新增整份問卷

@@ -17,12 +17,23 @@
       </li>
       <li>
         <span>開始時間</span>
-        <input type="date" [(ngModel)]="addQuestData.startDate">
+        <input
+          type="date"
+          [(ngModel)]="addQuestData.startDate"
+          [attr.min]="todayStr"
+          (change)="onStartDateChange()"
+        />
       </li>
       <li>
         <span>結束時間</span>
-        <input type="date" [(ngModel)]="addQuestData.endDate">
+        <input
+          type="date"
+          [(ngModel)]="addQuestData.endDate"
+          [attr.min]="endMinStr"
+          (change)="onEndDateChange()"
+        />
       </li>
+
     </ul>
     <div class="basic-tip" *ngIf="showBasicTip">請先填完所有內容</div>
 
@@ -178,6 +189,7 @@
         </table>
 
         <div class="submitBtn">
+          <button style="margin-right: 8px;">開啟預覽</button>
           <button (click)="submitBtn1()">送出</button>
         </div>
       </div>
