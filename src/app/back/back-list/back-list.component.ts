@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
 import { MenuComponent } from "../../menu/menu.component";
+import { HttpClientService } from '../../@http-clinet/http-clinet.service';
 
 @Component({
   selector: 'app-back-list',
@@ -31,6 +32,18 @@ export class BackListComponent {
 
   readonly dialog = inject(MatDialog);
 
+  // openDialog() {
+  //   const dialogRef = this.dialog.open(DialogComponent, {
+  //     width: '700px',
+  //     maxWidth: '700px',
+  //     panelClass: 'custom-dialog'
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     // console.log(`Dialog result: ${result}`);
+  //     this.refreshTable() // 配合 refreshTable()
+  //   });
+  // }
   openDialog() {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '700px',
@@ -38,18 +51,48 @@ export class BackListComponent {
       panelClass: 'custom-dialog'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log(`Dialog result: ${result}`);
-      this.refreshTable() // 配合 refreshTable()
+    dialogRef.afterClosed().subscribe((ok: boolean) => {
+      if (ok) {
+        // 送出成功時，重抓清單並更新表格
+        this.loadListFromServer();
+      }
     });
   }
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   inputContent!: string;
   newData!: MatTableDataSource<PeriodicElement>; // 不含狀態為'尚未發布'的新資料內容，類型不能是 Array，否則無法觸發換頁功能
 
-  constructor(private sourceDataService: SourceDataService) {}
+  constructor(
+    private sourceDataService: SourceDataService,
+    private httpClientService: HttpClientService
+  ) {}
+
+  //#########
+// === 狀態計算（超簡單版）===
+// 產生今天字串：YYYY-MM-DD
+today = (() => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+})();
+
+// 顯示狀態：依 startDate / endDate 與今天相比
+status(element: PeriodicElement): '尚未開始' | '進行中' | '已結束' {
+  const t = this.today; // 'YYYY-MM-DD'
+  // 轉成同樣格式即可用字串比較；也順手把 '2025-07-18T00:00:00' 這種取前 10 碼
+  const s = (element.startDate || '').toString().slice(0, 10).replace(/\//g, '-');
+  const e = (element.endDate   || '').toString().slice(0, 10).replace(/\//g, '-');
+
+  if (t < s) return '尚未開始';
+  if (t > e) return '已結束';
+  return '進行中'; // 介於 start~end（含邊界）
+}
+  //#########
 
   ngAfterViewInit() {
     // this.dataSource.paginator = this.paginator; // 預設的換頁功能設定，適用預設的 dataSource
@@ -67,11 +110,36 @@ export class BackListComponent {
     this.newData = new MatTableDataSource(filterArr);
 
     this.inputContent = '';
+    this.loadListFromServer(); // 一進頁就打後端
 
     console.log('服務資料', this.sourceDataService.sourceData)
     console.log('原始資料', this.dataSource.data)
     console.log('篩選後資料', this.newData.data)
+
+    // ########################### 顯示後台列表
+
+    let apiUrl = `http://localhost:8080/quiz/getAll`;
+
+    this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
+      console.log(res.quizList)
+
+      this.sourceDataService.sourceData = res.quizList;
+      this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
+
+      this.newData = new MatTableDataSource(this.dataSource.data);
+
+      this.newData.paginator = this.paginator; // 換頁
+
+
+
+    })
+
+    // ############################
+
+    console.log("newData", this.newData.data);
   }
+
+
 
   deleteData(): void {
     // 過濾掉被勾選的項目
@@ -160,6 +228,33 @@ export class BackListComponent {
     this.newData = new MatTableDataSource(filtered);
     this.newData.paginator = this.paginator;
   }
+
+  private loadListFromServer() {
+    const apiUrl = `http://localhost:8080/quiz/getAll`;
+    this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
+      // 後端回來的清單
+      const raw: PeriodicElement[] = res.quizList || [];
+
+      // 如果需要把後端欄位轉成你畫面用的欄位（例如狀態），在這裡做 mapping
+      // 例如：
+      // const mapped = raw.map(item => ({
+      //   ...item,
+      //   status: computeStatus(item.startDate, item.endDate, item.published),
+      // }));
+
+      this.sourceDataService.sourceData = raw; // 或 mapped
+
+      // 重建 table 資料
+      this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
+
+      const filterArr = this.sourceDataService.sourceData.filter(i => i.status !== '尚未發布');
+      this.newData = new MatTableDataSource(filterArr);
+
+      // ★ 重新指派 paginator（很重要，因為 new 了新的 MatTableDataSource）
+      this.newData.paginator = this.paginator;
+    });
+  }
+
 
 }
 

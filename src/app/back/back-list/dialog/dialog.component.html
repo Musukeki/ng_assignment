@@ -1,6 +1,11 @@
-<mat-tab-group class="custom-dialog" animationDuration="0">
+<mat-tab-group class="custom-dialog" animationDuration="0" [(selectedIndex)]="selectedIndex">
   <!-- 問卷題目 -->
-  <mat-tab label="問卷">
+  <!-- 問卷 -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      {{ selectedIndex === 1 ? '上一步' : '問卷' }}
+    </ng-template>
+
     <ul class="questAdd">
       <li>
         <span>問卷標題</span>
@@ -19,10 +24,17 @@
         <input type="date" [(ngModel)]="addQuestData.endDate">
       </li>
     </ul>
+    <div class="basic-tip" *ngIf="showBasicTip">請先填完所有內容</div>
+
   </mat-tab>
 
   <!-- 題型設定 -->
-  <mat-tab label="題目設定">
+  <!-- 題目設定：未填完前禁用，但 label 仍顯示「下一步」；被選取後顯示「題目設定」 -->
+  <mat-tab [disabled]="!isBasicFilled()">
+    <ng-template mat-tab-label>
+      {{ selectedIndex === 1 ? '題目設定' : '下一步' }}
+    </ng-template>
+
     <div class="questSet">
 
       <div class="questSetOption">
@@ -43,7 +55,11 @@
             <input type="checkbox" [(ngModel)]="addQuestData.addContent.isReqired">
           </li>
           <li>
-            <button (click)="addQuestItem()" class="addBtn" style="border: 1px solid #3e8d6c; color: #fff; background-color: #3e8d6c; line-height: 1.5; border-radius: 4px;">新增問題</button>
+            <button type="button" (click)="onAddClick()" [class.fake-disabled]="!canAddQuestion()" class="addBtn"
+              style="border: 1px solid #3e8d6c; color: #fff; background-color: #3e8d6c; line-height: 1.5; border-radius: 4px;">
+              新增問題
+            </button>
+
           </li>
         </ul>
 
@@ -55,13 +71,12 @@
             <div *ngSwitchCase="'single'">
               <p style="margin-bottom: 8px;">單選 問題選項</p>
 
-              <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId" class="option">
-                <input
-                  type="text"
-                  placeholder="輸入選項內容"
-                  [(ngModel)]="option.value"
-                />
-                <button (click)="removeOption(i)" class="delBtn">刪除</button>
+              <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId"
+                class="option">
+                <input type="text" placeholder="輸入選項內容" [(ngModel)]="option.value" />
+                <button type="button" (click)="removeOption(i)" class="delBtn">
+                  刪除
+                </button>
               </div>
 
             </div>
@@ -69,13 +84,12 @@
             <!-- 多選題 -->
             <div *ngSwitchCase="'multiple'" class="option">
               <p style="margin-bottom: 8px;">多選 問題選項</p>
-              <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId" class="option">
-                <input
-                  type="text"
-                  placeholder="輸入選項內容"
-                  [(ngModel)]="option.value"
-                />
-                <button (click)="removeOption(i)" class="delBtn">刪除</button>
+              <div *ngFor="let option of addQuestData.addContent.options; let i = index; trackBy: trackByOptionId"
+                class="option">
+                <input type="text" placeholder="輸入選項內容" [(ngModel)]="option.value" />
+                <button type="button" (click)="removeOption(i)" class="delBtn">
+                  刪除
+                </button>
               </div>
 
             </div>
@@ -91,8 +105,6 @@
 
           </div>
 
-
-
           <div>
             <button *ngIf="addQuestData.addContent.type !== 'text'" (click)="addOption()">加入選項</button>
           </div>
@@ -107,43 +119,69 @@
               <th width="40%">提問內容</th>
               <th width="20%">題目類型</th>
               <th width="20%">是否必填</th>
-              <th width="15%">編輯</th>
+              <th width="15%">刪除</th>
             </tr>
           </thead>
-          <tbody id="questSetListTbody">
 
-            @if(addQuestData.questOptions[0].id == '' && addQuestData.questOptions.length == 1) {
-
+          <!-- <tbody id="questSetListTbody">
+            @if (addQuestData.questOptions.length === 0) {
+            <tr>
+              <td colspan="5" style="text-align:center;color:#888;">尚未新增題目</td>
+            </tr>
             } @else {
-              @for(option of addQuestData.questOptions; track $index; let i = $index) {
-                @if(i != 0) {
-                  <tr>
-                    <td>
-                      <input type="checkbox">
-                    </td>
+            @for (option of addQuestData.questOptions; track option.id) {
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>{{ option.optionContent }}</td>
+              <td>
+                @if (option.type === 'single') { 單選題 }
+                @else if (option.type === 'multiple') { 多選題 }
+                @else { 文字內容 }
+              </td>
+              <td>{{ option.isReqired ? '是' : '否' }}</td>
+              <td style="position: relative;"><img src="delete.png" style="width: 16px; height: 16px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);" alt="delete_img"></td>
+            </tr>
+            }
+          }
+          </tbody> -->
 
-                    <td>{{ option.optionContent }}</td>
-                    <td>
-                      @if(option.type == 'single') { 單選題 }
-                      @else if(option.type == 'multiple') { 多選題 }
-                      @else if(option.type == 'text') { 文字內容 }
-                    </td>
-                    <td>
-                      @if(option.isReqired == true) { 是 }
-                      @else { 否 }
-                    </td>
-                    <td>編輯</td>
-                  </tr>
-                }
+          <tbody id="questSetListTbody">
+            @if (addQuestData.questOptions.length === 0) {
+              <tr>
+                <td colspan="5" style="text-align:center;color:#888;">尚未新增題目</td>
+              </tr>
+            } @else {
+              @for (option of addQuestData.questOptions; track option.id; let i = $index) {
+                <tr>
+                  <td><input type="checkbox"></td>
+                  <td>{{ option.optionContent }}</td>
+                  <td>
+                    @if (option.type === 'single') { 單選題 }
+                    @else if (option.type === 'multiple') { 多選題 }
+                    @else { 文字內容 }
+                  </td>
+                  <td>{{ option.isReqired ? '是' : '否' }}</td>
+                  <td style="position: relative;">
+                    <img
+                      src="delete.png"
+                      alt="delete_img"
+                      (click)="deleteQuestion(i)"
+                      style="width:16px;height:16px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);cursor:pointer;"
+                    >
+                  </td>
+                </tr>
               }
             }
+          </tbody>
+
+
         </table>
 
         <div class="submitBtn">
-          <button (click)="submitBtn()">送出</button>
+          <button (click)="submitBtn1()">送出</button>
         </div>
       </div>
-  </div>
+    </div>
   </mat-tab>
   <!-- <mat-tab label="問卷回饋">問卷回饋</mat-tab> -->
   <!-- <mat-tab label="統計">統計</mat-tab> -->
