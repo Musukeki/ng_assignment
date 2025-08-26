@@ -134,28 +134,6 @@
             </tr>
           </thead>
 
-          <!-- <tbody id="questSetListTbody">
-            @if (addQuestData.questOptions.length === 0) {
-            <tr>
-              <td colspan="5" style="text-align:center;color:#888;">尚未新增題目</td>
-            </tr>
-            } @else {
-            @for (option of addQuestData.questOptions; track option.id) {
-            <tr>
-              <td><input type="checkbox"></td>
-              <td>{{ option.optionContent }}</td>
-              <td>
-                @if (option.type === 'single') { 單選題 }
-                @else if (option.type === 'multiple') { 多選題 }
-                @else { 文字內容 }
-              </td>
-              <td>{{ option.isReqired ? '是' : '否' }}</td>
-              <td style="position: relative;"><img src="delete.png" style="width: 16px; height: 16px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);" alt="delete_img"></td>
-            </tr>
-            }
-          }
-          </tbody> -->
-
           <tbody id="questSetListTbody">
             @if (addQuestData.questOptions.length === 0) {
               <tr>

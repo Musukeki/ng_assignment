@@ -1,30 +1,52 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-preview',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule],
+  standalone: true,
+  imports: [],
   templateUrl: './add-preview.component.html',
   styleUrl: './add-preview.component.scss'
 })
 export class AddPreviewComponent {
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
-  constructor( private router: Router) {}
-
-  name!: String;
-  description!: String;
-  startDate!: String;
-  endDate!: String;
-  published!: true;
+  name = '';
+  description = '';
+  startDate = '';
+  endDate = '';
+  published = true;
   questionList: Array<any> = [];
 
-
-
   ngOnInit() {
+    const id = this.route.snapshot.queryParamMap.get('previewId');
+    if (!id) { alert('沒有預覽資料（缺少 previewId）'); return; }
 
+    const raw = localStorage.getItem(id);
+    if (!raw) { alert('預覽資料不存在或已過期'); return; }
+
+    try {
+      const data = JSON.parse(raw);
+      this.name        = data.name ?? '';
+      this.description = data.description ?? '';
+      this.startDate   = data.startDate ?? '';
+      this.endDate     = data.endDate ?? '';
+      this.published   = !!data.published;
+      this.questionList = Array.isArray(data.questionList) ? data.questionList : [];
+    } catch (e) {
+      console.error('解析預覽資料失敗', e);
+      alert('預覽資料格式錯誤');
+    }
+
+    // ✅ 等使用者關閉或離開預覽頁再清掉該筆暫存
+    const cleanup = () => localStorage.removeItem(id);
+    window.addEventListener('beforeunload', cleanup);
+    // 若你有路由守衛/其他生命週期，也可以在 ngOnDestroy 清：
+    // ngOnDestroy(){ localStorage.removeItem(id); }
   }
+
 }
+
 
 
 

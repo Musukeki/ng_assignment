@@ -291,35 +291,6 @@ onEndDateChange() {
 }
 
 
-
-  // 新增整份問卷
-  // submitBtn() {
-  //   let getNumber = 0;
-  //   if(this.sourceDataService.sourceData.length == 0) {
-  //     getNumber = 0;
-  //   } else {
-  //     getNumber = this.sourceDataService.sourceData[this.sourceDataService.sourceData.length - 1 ].number + 1;
-  //   }
-
-  //   this.sourceDataService.sourceData = [
-  //     ...this.sourceDataService.sourceData,
-  //     {
-  //       number: getNumber,
-  //       name: this.addQuestData.questTitle,
-  //       status: '進行中',
-  //       startDate: this.addQuestData.startDate,
-  //       endDate: this.addQuestData.endDate,
-  //       id: getNumber.toString(),
-  //       checked: false
-  //     }
-  //   ]
-  //   console.log('服務資料', this.sourceDataService.sourceData)
-  //   this.dialogRef.close();
-
-  //   console.log(this.sourceDataService.sourceData)
-  //   console.log(this.addQuestData);
-  // }
-
   removeOption(index: number) {
     const type = this.addQuestData.addContent.type;
     const opts = this.addQuestData.addContent.options || [];
@@ -424,24 +395,77 @@ onEndDateChange() {
     return true;
   }
 
+  // openPreviewInNewTab() {
+  //   // 產 route
+  //   const tree = this.router.createUrlTree(['/back/backPreview']);
+  //   const url  = this.router.serializeUrl(tree);
+  //   // 轉成絕對網址（避免 baseHref/相對路徑問題）
+  //   const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
+
+  //   // 比較不會被瀏覽器當成 popup 的流程
+  //   const win = window.open('', '_blank'); // 先開空白分頁（點擊同步觸發）
+  //   if (!win) {
+  //     alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗。');
+  //     // 後援方案：同分頁導到預覽
+  //     this.router.navigateByUrl('/back/backPreview');
+  //     return;
+  //   }
+  //   win.opener = null;        // 安全
+  //   win.location.href = abs;  // 導到真正的預覽頁
+  // }
+
   openPreviewInNewTab() {
-    // 產 route
-    const tree = this.router.createUrlTree(['/back/backPreview']);
+    // 1) 準備預覽資料（略：你的整段 questionList 組裝維持原寫法）
+    const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
+      const typeUpper = (q.type || '').toUpperCase();
+      const optionTexts =
+        typeUpper === 'TEXT'
+          ? []
+          : ((q.options || [])
+              .map(o => (o?.value ?? '').toString().trim())
+              .filter(s => s.length > 0));
+      return {
+        questionId: idx + 1,
+        question: q.optionContent ?? '',
+        type: typeUpper,
+        required: !!q.isReqired,
+        options: optionTexts
+      };
+    });
+
+    const previewData = {
+      name: this.addQuestData.questTitle ?? '',
+      description: this.addQuestData.questDesc ?? '',
+      startDate: this.addQuestData.startDate ?? '',
+      endDate: this.addQuestData.endDate ?? '',
+      published: true,
+      questionList
+    };
+
+    // 2) 存 localStorage（先存再開窗都可以，這裡沿用先存）
+    const previewId = `quiz_preview_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(previewId, JSON.stringify(previewData));
+
+    // 3) 產 URL（帶上 query）
+    const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
     const url  = this.router.serializeUrl(tree);
-    // 轉成絕對網址（避免 baseHref/相對路徑問題）
     const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
 
-    // 比較不會被瀏覽器當成 popup 的流程
-    const win = window.open('', '_blank'); // 先開空白分頁（點擊同步觸發）
-    if (!win) {
-      alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗。');
-      // 後援方案：同分頁導到預覽
-      this.router.navigateByUrl('/back/backPreview');
-      return;
+    // 4) 先開一個空白分頁，再指定網址（被視為使用者主動行為，比較不會被擋）
+    const win = window.open('about:blank', '_blank');
+    if (win) {
+      win.opener = null;        // 安全
+      win.location.href = abs;  // 導到預覽頁
+      return;                   // ✅ 成功開新分頁，不要再導本頁
     }
-    win.opener = null;        // 安全
-    win.location.href = abs;  // 導到真正的預覽頁
+
+    // 5) 後援：彈出被擋才用「同分頁導頁」+ 關掉 Dialog，避免你說的「跳到預覽但 Dialog 還在」
+    alert('瀏覽器阻擋了彈出視窗，將在此分頁開啟預覽');
+    this.dialogRef.close(false);         // 把 Dialog 關掉
+    this.router.navigateByUrl(url);      // 同分頁導頁
   }
+
+
 
 
 
