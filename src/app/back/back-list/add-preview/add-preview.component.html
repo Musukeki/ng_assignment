@@ -1,7 +1,24 @@
-<p>問卷標題：{{ name }}</p>
-<p>問卷說明：{{ description }}</p>
-<p>開始時間：{{ startDate }}</p>
-<p>結束時間：{{ endDate }}</p>
+<div style="padding: 24px; background-color: #c5c5c5; width: 80%; margin: 0 auto;">
+  <p>問卷標題：{{ name }}</p>
+  <p>問卷說明：{{ description }}</p>
+  <p>開始時間：{{ startDate }}</p>
+  <p>結束時間：{{ endDate }}</p>
 
-<p>{{ questionList }}</p>
 
+  @for (item of questionList; track $index) {
+  <ul>
+    <li>{{ item.questionId }}</li>
+    <li>{{ item.question }}</li>
+    <li>{{ item.type }}</li>
+    <li>{{ item.required }}</li>
+    <li style="border-bottom: 1px black solid;">
+      @for (item1 of item.options; track $index; let i = $index) {
+      <ul>
+        <li>{{ item1 }}</li>
+      </ul>
+      }
+
+    </li>
+  </ul>
+  }
+</div>

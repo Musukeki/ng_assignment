@@ -110,6 +110,7 @@ export class DialogComponent {
   selectedIndex = 0;     // 目前分頁索引
   showBasicTip = false;  // 是否顯示右下角提示
   editingIndex: number | null = null;
+  private openingPreview = false;
 
 
   trackByOptionId = (_index: number, item: { id?: number | string } | null | undefined) =>
@@ -214,8 +215,8 @@ export class DialogComponent {
         typeUpper === 'TEXT'
           ? []
           : ((q.options || [])
-              .map(o => (o?.value ?? '').toString().trim())
-              .filter(s => s.length > 0));
+            .map(o => (o?.value ?? '').toString().trim())
+            .filter(s => s.length > 0));
 
       return {
         questionId: idx + 1,               // 只用順序編號
@@ -251,44 +252,44 @@ export class DialogComponent {
 
 
   // 產生今天（本地時區）的 YYYY-MM-DD 字串，避免時區造成 off-by-one
-todayStr: string = this.toDateInputValue(new Date());
+  todayStr: string = this.toDateInputValue(new Date());
 
-// 結束時間的最小可選日：max(開始時間, 今天)
-get endMinStr(): string {
-  const s = this.addQuestData.startDate || '';
-  return s && s > this.todayStr ? s : this.todayStr;
-}
-
-// 供 <input type="date"> 用的日期字串
-private toDateInputValue(d: Date): string {
-  const off = d.getTimezoneOffset();
-  const local = new Date(d.getTime() - off * 60000);
-  return local.toISOString().slice(0, 10);
-}
-
-// 使用者變更「開始時間」時觸發
-onStartDateChange() {
-  const s = this.addQuestData.startDate;
-  // 不得早於今天
-  if (s && s < this.todayStr) {
-    this.addQuestData.startDate = this.todayStr;
+  // 結束時間的最小可選日：max(開始時間, 今天)
+  get endMinStr(): string {
+    const s = this.addQuestData.startDate || '';
+    return s && s > this.todayStr ? s : this.todayStr;
   }
-  // 讓結束時間維持 >= 開始時間（若已選結束時間且比開始時間小，就自動調整）
-  const endMin = this.endMinStr;
-  if (this.addQuestData.endDate && this.addQuestData.endDate < endMin) {
-    this.addQuestData.endDate = endMin;
-  }
-}
 
-// 使用者變更「結束時間」時觸發
-onEndDateChange() {
-  const endMin = this.endMinStr;
-  const e = this.addQuestData.endDate;
-  // 不得早於 endMin（= max(開始時間, 今天)）
-  if (e && e < endMin) {
-    this.addQuestData.endDate = endMin;
+  // 供 <input type="date"> 用的日期字串
+  private toDateInputValue(d: Date): string {
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off * 60000);
+    return local.toISOString().slice(0, 10);
   }
-}
+
+  // 使用者變更「開始時間」時觸發
+  onStartDateChange() {
+    const s = this.addQuestData.startDate;
+    // 不得早於今天
+    if (s && s < this.todayStr) {
+      this.addQuestData.startDate = this.todayStr;
+    }
+    // 讓結束時間維持 >= 開始時間（若已選結束時間且比開始時間小，就自動調整）
+    const endMin = this.endMinStr;
+    if (this.addQuestData.endDate && this.addQuestData.endDate < endMin) {
+      this.addQuestData.endDate = endMin;
+    }
+  }
+
+  // 使用者變更「結束時間」時觸發
+  onEndDateChange() {
+    const endMin = this.endMinStr;
+    const e = this.addQuestData.endDate;
+    // 不得早於 endMin（= max(開始時間, 今天)）
+    if (e && e < endMin) {
+      this.addQuestData.endDate = endMin;
+    }
+  }
 
 
   removeOption(index: number) {
@@ -414,16 +415,91 @@ onEndDateChange() {
   //   win.location.href = abs;  // 導到真正的預覽頁
   // }
 
+  // openPreviewInNewTab() {
+  //   // 1) 準備預覽資料（略：你的整段 questionList 組裝維持原寫法）
+  //   const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
+  //     const typeUpper = (q.type || '').toUpperCase();
+  //     const optionTexts =
+  //       typeUpper === 'TEXT'
+  //         ? []
+  //         : ((q.options || [])
+  //             .map(o => (o?.value ?? '').toString().trim())
+  //             .filter(s => s.length > 0));
+  //     return {
+  //       questionId: idx + 1,
+  //       question: q.optionContent ?? '',
+  //       type: typeUpper,
+  //       required: !!q.isReqired,
+  //       options: optionTexts
+  //     };
+  //   });
+
+  //   const previewData = {
+  //     name: this.addQuestData.questTitle ?? '',
+  //     description: this.addQuestData.questDesc ?? '',
+  //     startDate: this.addQuestData.startDate ?? '',
+  //     endDate: this.addQuestData.endDate ?? '',
+  //     published: true,
+  //     questionList
+  //   };
+
+  //   // 2) 存 localStorage（先存再開窗都可以，這裡沿用先存）
+  //   const previewId = `quiz_preview_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  //   localStorage.setItem(previewId, JSON.stringify(previewData));
+
+  //   // 3) 產 URL（帶上 query）
+  //   const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
+  //   const url  = this.router.serializeUrl(tree);
+  //   const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
+
+  //   // 4) 先開一個空白分頁，再指定網址（被視為使用者主動行為，比較不會被擋）
+  //   const win = window.open('about:blank', '_blank');
+  //   if (win) {
+  //     win.opener = null;        // 安全
+  //     win.location.href = abs;  // 導到預覽頁
+  //     return;                   // ✅ 成功開新分頁，不要再導本頁
+  //   }
+
+  //   // 5) 後援：彈出被擋才用「同分頁導頁」+ 關掉 Dialog，避免你說的「跳到預覽但 Dialog 還在」
+  //   alert('瀏覽器阻擋了彈出視窗，將在此分頁開啟預覽');
+  //   this.dialogRef.close(false);         // 把 Dialog 關掉
+  //   this.router.navigateByUrl(url);      // 同分頁導頁
+  // }
+
   openPreviewInNewTab() {
-    // 1) 準備預覽資料（略：你的整段 questionList 組裝維持原寫法）
-    const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
+    const qs = this.addQuestData.questOptions || [];
+
+    // 防呆：沒題目
+    if (qs.length === 0) {
+      this.selectedIndex = 1;
+      alert('尚未加入任何問題');
+      return;
+    }
+
+    // 防呆：單/多選題少於 2 個有效選項
+    const hasChoiceWithoutOptions = qs.some(q => {
+      const t = (q.type || '').toUpperCase();
+      if (t === 'TEXT') return false;
+      const opts = (q.options || [])
+        .map(o => (o?.value ?? '').toString().trim())
+        .filter(s => s.length > 0);
+      return opts.length < 2;
+    });
+    if (hasChoiceWithoutOptions) {
+      this.selectedIndex = 1;
+      alert('尚未加入選項');
+      return;
+    }
+
+    // 組預覽資料
+    const questionList = qs.map((q, idx) => {
       const typeUpper = (q.type || '').toUpperCase();
       const optionTexts =
         typeUpper === 'TEXT'
           ? []
           : ((q.options || [])
-              .map(o => (o?.value ?? '').toString().trim())
-              .filter(s => s.length > 0));
+            .map(o => (o?.value ?? '').toString().trim())
+            .filter(s => s.length > 0));
       return {
         questionId: idx + 1,
         question: q.optionContent ?? '',
@@ -442,28 +518,103 @@ onEndDateChange() {
       questionList
     };
 
-    // 2) 存 localStorage（先存再開窗都可以，這裡沿用先存）
+    // 存 localStorage
     const previewId = `quiz_preview_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    localStorage.setItem(previewId, JSON.stringify(previewData));
-
-    // 3) 產 URL（帶上 query）
-    const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
-    const url  = this.router.serializeUrl(tree);
-    const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
-
-    // 4) 先開一個空白分頁，再指定網址（被視為使用者主動行為，比較不會被擋）
-    const win = window.open('about:blank', '_blank');
-    if (win) {
-      win.opener = null;        // 安全
-      win.location.href = abs;  // 導到預覽頁
-      return;                   // ✅ 成功開新分頁，不要再導本頁
+    try {
+      localStorage.setItem(previewId, JSON.stringify(previewData));
+    } catch (e) {
+      console.error(e);
+      alert('無法開啟預覽：localStorage 容量不足或被封鎖');
+      return;
     }
 
-    // 5) 後援：彈出被擋才用「同分頁導頁」+ 關掉 Dialog，避免你說的「跳到預覽但 Dialog 還在」
-    alert('瀏覽器阻擋了彈出視窗，將在此分頁開啟預覽');
-    this.dialogRef.close(false);         // 把 Dialog 關掉
-    this.router.navigateByUrl(url);      // 同分頁導頁
+    // 建出預覽網址
+    const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
+    const url = this.router.serializeUrl(tree);
+    const abs = url.startsWith('http') ? url : `${location.origin}${url}`;
+
+    const win = window.open(abs, '_blank'); // 不要傳 'noopener'
+    if (win) {
+      try { win.opener = null; } catch { }
+    } else {
+      alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
+    }
+
+    // 釋放鎖（下一個事件循環再放）
+    setTimeout(() => (this.openingPreview = false), 0);
+
   }
+
+
+
+
+  saveDraft() {
+    const apiUrl = `http://localhost:8080/quiz/create`;
+
+    // 1) 沒有任何題目
+    if (!this.addQuestData.questOptions || this.addQuestData.questOptions.length === 0) {
+      this.selectedIndex = 1;             // 切回題目設定分頁
+      alert('尚未加入任何問題');
+      return;
+    }
+
+    // 2) 有單/多選題但沒有選項（或有效選項不足 2 個）
+    const hasChoiceWithoutOptions = (this.addQuestData.questOptions || []).some(q => {
+      const t = (q.type || '').toUpperCase();
+      if (t === 'TEXT') return false;
+      const optionTexts = (q.options || [])
+        .map(o => (o?.value ?? '').toString().trim())
+        .filter(s => s.length > 0);
+      return optionTexts.length < 2; // 視需求改成 === 0 也行
+    });
+
+    if (hasChoiceWithoutOptions) {
+      this.selectedIndex = 1;
+      alert('尚未加入選項');
+      return;
+    }
+
+    // 3) 組 questionList（與送出一致）
+    const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
+      const typeUpper = (q.type || '').toUpperCase();
+      const optionTexts =
+        typeUpper === 'TEXT'
+          ? []
+          : ((q.options || [])
+            .map(o => (o?.value ?? '').toString().trim())
+            .filter(s => s.length > 0));
+
+      return {
+        questionId: idx + 1,
+        question: q.optionContent ?? '',
+        type: typeUpper,
+        required: !!q.isReqired,   // 保留「是否必填」的使用者設定
+        options: optionTexts
+      };
+    });
+
+    const postData = {
+      name: this.addQuestData.questTitle ?? '',
+      description: this.addQuestData.questDesc ?? '',
+      startDate: this.addQuestData.startDate ?? '',
+      endDate: this.addQuestData.endDate ?? '',
+      published: false,            // 草稿
+      questionList
+    };
+
+    this.httpClientService.postApi(apiUrl, postData).subscribe({
+      next: (res) => {
+        alert('草稿已儲存');
+        this.dialogRef.close({ status: 'draftSaved', data: res }); // 儲存成功就關閉 dialog
+      },
+      error: (err) => {
+        console.error(err);
+        alert('草稿儲存失敗');
+      }
+    });
+  }
+
+
 
 
 

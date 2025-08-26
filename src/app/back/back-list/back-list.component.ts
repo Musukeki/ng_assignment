@@ -32,18 +32,6 @@ export class BackListComponent {
 
   readonly dialog = inject(MatDialog);
 
-  // openDialog() {
-  //   const dialogRef = this.dialog.open(DialogComponent, {
-  //     width: '700px',
-  //     maxWidth: '700px',
-  //     panelClass: 'custom-dialog'
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     // console.log(`Dialog result: ${result}`);
-  //     this.refreshTable() // 配合 refreshTable()
-  //   });
-  // }
   openDialog() {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '700px',
@@ -234,13 +222,6 @@ status(element: PeriodicElement): '尚未開始' | '進行中' | '已結束' {
     this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
       // 後端回來的清單
       const raw: PeriodicElement[] = res.quizList || [];
-
-      // 如果需要把後端欄位轉成你畫面用的欄位（例如狀態），在這裡做 mapping
-      // 例如：
-      // const mapped = raw.map(item => ({
-      //   ...item,
-      //   status: computeStatus(item.startDate, item.endDate, item.published),
-      // }));
 
       this.sourceDataService.sourceData = raw; // 或 mapped
 

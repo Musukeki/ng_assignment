@@ -167,9 +167,17 @@
         </table>
 
         <div class="submitBtn">
-          <button (click)="openPreviewInNewTab()" style="margin-right: 8px;">開啟預覽</button>
-          <button (click)="submitBtn1()">送出</button>
+          <button type="button" (click)="openPreviewInNewTab()" style="margin-right: 8px;">
+            開啟預覽
+          </button>
+          <button type="button" (click)="saveDraft()" style="margin-right: 8px;">
+            儲存草稿
+          </button>
+          <button type="button" (click)="submitBtn1()">
+            送出
+          </button>
         </div>
+
       </div>
     </div>
   </mat-tab>
