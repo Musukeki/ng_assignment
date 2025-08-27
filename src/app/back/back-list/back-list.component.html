@@ -22,7 +22,7 @@
   </ul>
 
   <button class="baseBtn" style="margin-right: 4px; color: #fff;" matButton (click)="openDialog()">新增</button>
-  <button class="baseBtn" style="color: #fff;" (click)="deleteData()">刪除</button>
+  <button class="baseBtn" style="color: #fff;" (click)="onDeleteClick()">刪除</button>
 
   <!-- 下方列表 -->
   <div class="mat-elevation-z8">
@@ -31,7 +31,7 @@
       <ng-container matColumnDef="選取操作">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <input type="checkbox" [(ngModel)]="element.checked">
+          <input type="checkbox" [(ngModel)]="element.checked" (ngModelChange)="onCheckChange(element, $event)">
         </td>
       </ng-container>
 

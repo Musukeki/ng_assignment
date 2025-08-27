@@ -36,7 +36,7 @@ export class BackListComponent implements AfterViewInit {
   constructor(
     private sourceDataService: SourceDataService,
     private httpClientService: HttpClientService
-  ) {}
+  ) { }
 
   // === 狀態計算（優先判斷草稿，再判斷時間）===
   today = (() => {
@@ -59,7 +59,7 @@ export class BackListComponent implements AfterViewInit {
     // 再用時間判斷
     const t = this.today; // 'YYYY-MM-DD'
     const s = (element.startDate || '').toString().slice(0, 10).replace(/\//g, '-');
-    const e = (element.endDate   || '').toString().slice(0, 10).replace(/\//g, '-');
+    const e = (element.endDate || '').toString().slice(0, 10).replace(/\//g, '-');
 
     if (t < s) return '尚未開始';
     if (t > e) return '已結束';
@@ -98,15 +98,96 @@ export class BackListComponent implements AfterViewInit {
     });
   }
 
-  deleteData(): void {
-    // 移除勾選的資料
-    this.sourceDataService.sourceData = this.sourceDataService.sourceData.filter(item => !item.checked);
+  selectedIds: (string | number)[] = [];  //勾選到的問卷 id
 
-    // 重建表格（不做任何 "尚未發布" 過濾）
-    this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
-    this.newData = new MatTableDataSource(this.sourceDataService.sourceData);
-    this.newData.paginator = this.paginator;
+  onCheckChange(row: any, checked: boolean) {
+    row.checked = checked; //讓資料本身也同步（你已經有 [(ngModel)] 其實會同步，這行可留可不留）
+    const id = row.id;
+
+    const i = this.selectedIds.indexOf(id);
+    if (checked && i === -1) {
+      this.selectedIds.push(id);          //勾選 => 加進陣列
+    } else if (!checked && i !== -1) {
+      this.selectedIds.splice(i, 1);      //取消 => 從陣列移除
+    }
   }
+
+  onDeleteClick() {
+    let deleteUrl = `http://localhost:8080/quiz/delete?`;
+    if (this.selectedIds.length === 0) {
+      alert('請先勾選要刪除的問卷');
+      return;
+    }
+    console.log('要刪除的問卷編號：', this.selectedIds);
+
+    // 你原本的寫法（保留）
+    this.selectedIds.forEach((item) => {
+      deleteUrl += `&quizId=${item}`;
+    });
+    console.log(deleteUrl);
+
+    this.httpClientService.postApi(deleteUrl, "").subscribe({
+      next: (res: any) => {
+        console.log(res);
+
+        // ====== 做法 B：本地更新表格 ======
+        const toDelete = new Set(this.selectedIds);
+
+        // 1) 更新本地資料源（service 裡那份）
+        this.sourceDataService.sourceData =
+          this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
+
+        // 2) 重建 MatTableDataSource + 重新掛 paginator（很重要）
+        this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
+        this.newData   = new MatTableDataSource(this.sourceDataService.sourceData);
+        this.newData.paginator = this.paginator;
+
+        // 3) 清空勾選狀態避免殘留
+        this.selectedIds = [];
+        this.newData.data.forEach((row: any) => row.checked = false);
+        // ==================================
+      },
+      error: (err) => {
+        console.error(err);
+        alert('刪除失敗');
+      }
+    });
+  }
+
+
+  // onDeleteClick() {
+  //   if (this.selectedIds.length === 0) {
+  //     alert('請先勾選要刪除的問卷');
+  //     return;
+  //   }
+
+  //   const params = this.selectedIds.map(id => `quizId=${id}`).join('&');
+  //   const deleteUrl = `http://localhost:8080/quiz/delete?${params}`;
+
+  //   this.httpClientService.postApi(deleteUrl, null).subscribe({
+  //     next: () => {
+  //       const toDelete = new Set(this.selectedIds);
+
+  //       // 1) 更新本地資料源
+  //       this.sourceDataService.sourceData =
+  //         this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
+
+  //       // 2) 重建表格資料 + 重新掛 paginator（很重要）
+  //       this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
+  //       this.newData   = new MatTableDataSource(this.sourceDataService.sourceData);
+  //       this.newData.paginator = this.paginator;
+
+  //       // 3) 清空勾選
+  //       this.selectedIds = [];
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       alert('刪除失敗');
+  //     }
+  //   });
+  // }
+
+
 
   refreshTable() {
     const rawData = this.sourceDataService.sourceData;
@@ -140,7 +221,7 @@ export class BackListComponent implements AfterViewInit {
     const formatDate = (dateStr: string): string => dateStr.replaceAll('/', '-');
 
     if (start) filtered = filtered.filter(item => formatDate(item.startDate) >= start);
-    if (end)   filtered = filtered.filter(item => formatDate(item.endDate) <= end);
+    if (end) filtered = filtered.filter(item => formatDate(item.endDate) <= end);
 
     this.newData = new MatTableDataSource(filtered);
     this.newData.paginator = this.paginator;
@@ -166,6 +247,8 @@ export class BackListComponent implements AfterViewInit {
       this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
       this.newData = new MatTableDataSource(this.sourceDataService.sourceData);
       this.newData.paginator = this.paginator; // ★ 重要：重建資料來源後要重新指定 paginator
+
+      console.log(this.newData.data);
     });
   }
 }
