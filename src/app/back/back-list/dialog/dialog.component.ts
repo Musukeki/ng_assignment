@@ -199,7 +199,7 @@ export class DialogComponent {
       return;
     }
 
-    // ★ 關鍵：沒有任何題目時阻止送出並提示
+    // 沒有任何題目
     if (!this.addQuestData.questOptions || this.addQuestData.questOptions.length === 0) {
       this.selectedIndex = 1; // 切到題目設定分頁
       alert('尚未加入任何問題');
@@ -210,7 +210,9 @@ export class DialogComponent {
 
     // 把前端題目轉成後端 QuestionVo 需要的格式
     const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
-      const typeUpper = (q.type || '').toUpperCase(); // 'SINGLE' | 'MULTIPLE' | 'TEXT'
+      // const typeUpper = (q.type || '').toUpperCase(); // 'SINGLE' | 'MULTIPLE' | 'TEXT'
+      const typeUpper = (q.type === 'multiple') ? 'MULTI' : (q.type || '').toUpperCase();
+
       const optionTexts =
         typeUpper === 'TEXT'
           ? []
@@ -219,7 +221,7 @@ export class DialogComponent {
             .filter(s => s.length > 0));
 
       return {
-        questionId: idx + 1,               // 只用順序編號
+        questionId: idx + 1,
         question: q.optionContent ?? '',
         type: typeUpper,
         required: !!q.isReqired,
@@ -230,13 +232,15 @@ export class DialogComponent {
     const postData = {
       name: this.addQuestData.questTitle ?? '',
       description: this.addQuestData.questDesc ?? '',
-      startDate: this.addQuestData.startDate, // 'YYYY-MM-DD'
+      startDate: this.addQuestData.startDate,
       endDate: this.addQuestData.endDate,
-      published: true,                         // 後端是 boolean：req.isPublished()
+      published: true, // 發佈
       questionList
     };
 
-    console.log('postData =', JSON.stringify(postData, null, 2));
+    // ★ 印出要送到 API 的資料
+    console.log('[Submit] postData object:', postData);
+    console.log('[Submit] postData JSON:\n', JSON.stringify(postData, null, 2));
 
     this.httpClientService.postApi(apiUrl, postData).subscribe({
       next: (res: any) => {
@@ -245,10 +249,10 @@ export class DialogComponent {
       },
       error: (err) => {
         console.error('建立失敗:', err?.error || err);
-        // 若還是 400，請確認：單/多選有沒有輸入選項文字？type 是否是 SINGLE/MULTIPLE/TEXT？
       }
     });
   }
+
 
 
   // 產生今天（本地時區）的 YYYY-MM-DD 字串，避免時區造成 off-by-one
@@ -478,8 +482,10 @@ export class DialogComponent {
 
     // 防呆：單/多選題少於 2 個有效選項
     const hasChoiceWithoutOptions = qs.some(q => {
-      const t = (q.type || '').toUpperCase();
-      if (t === 'TEXT') return false;
+      // const t = (q.type || '').toUpperCase();
+      const typeUpper = (q.type === 'multiple') ? 'MULTI' : (q.type || '').toUpperCase();
+
+      if (typeUpper === 'TEXT') return false;
       const opts = (q.options || [])
         .map(o => (o?.value ?? '').toString().trim())
         .filter(s => s.length > 0);
@@ -491,9 +497,12 @@ export class DialogComponent {
       return;
     }
 
-    // 組預覽資料
+    // 組預覽/將送出資料
     const questionList = qs.map((q, idx) => {
-      const typeUpper = (q.type || '').toUpperCase();
+      // const typeUpper = (q.type || '').toUpperCase();
+      const typeUpper =
+        (q.type || '').toLowerCase() === 'multiple' ? 'MULTI' : (q.type || '').toUpperCase();
+
       const optionTexts =
         typeUpper === 'TEXT'
           ? []
@@ -509,41 +518,39 @@ export class DialogComponent {
       };
     });
 
-    const previewData = {
+    const postDataForPreview = {
       name: this.addQuestData.questTitle ?? '',
       description: this.addQuestData.questDesc ?? '',
       startDate: this.addQuestData.startDate ?? '',
       endDate: this.addQuestData.endDate ?? '',
-      published: true,
+      published: true, // 預覽時我們假設將要發佈的樣子
       questionList
     };
 
-    // 存 localStorage
+    // ★ 印出「如果送出，會 POST 的資料」
+    console.log('[Preview] postData object:', postDataForPreview);
+    console.log('[Preview] postData JSON:\n', JSON.stringify(postDataForPreview, null, 2));
+
+    // 預覽頁就沿用同一份資料寫入 localStorage
     const previewId = `quiz_preview_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     try {
-      localStorage.setItem(previewId, JSON.stringify(previewData));
+      localStorage.setItem(previewId, JSON.stringify(postDataForPreview));
     } catch (e) {
       console.error(e);
       alert('無法開啟預覽：localStorage 容量不足或被封鎖');
       return;
     }
 
-    // 建出預覽網址
     const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
     const url = this.router.serializeUrl(tree);
     const abs = url.startsWith('http') ? url : `${location.origin}${url}`;
 
-    const win = window.open(abs, '_blank'); // 不要傳 'noopener'
-    if (win) {
-      try { win.opener = null; } catch { }
-    } else {
+    const win = window.open(abs, '_blank');
+    if (!win) {
       alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
     }
-
-    // 釋放鎖（下一個事件循環再放）
-    setTimeout(() => (this.openingPreview = false), 0);
-
   }
+
 
 
 
@@ -551,32 +558,36 @@ export class DialogComponent {
   saveDraft() {
     const apiUrl = `http://localhost:8080/quiz/create`;
 
-    // 1) 沒有任何題目
+    // 沒有任何題目
     if (!this.addQuestData.questOptions || this.addQuestData.questOptions.length === 0) {
-      this.selectedIndex = 1;             // 切回題目設定分頁
+      this.selectedIndex = 1;
       alert('尚未加入任何問題');
       return;
     }
 
-    // 2) 有單/多選題但沒有選項（或有效選項不足 2 個）
+    // 有單/多選題但有效選項不足 2 個
     const hasChoiceWithoutOptions = (this.addQuestData.questOptions || []).some(q => {
-      const t = (q.type || '').toUpperCase();
-      if (t === 'TEXT') return false;
+      // const t = (q.type || '').toUpperCase();
+      const typeUpper = (q.type === 'multiple') ? 'MULTI' : (q.type || '').toUpperCase();
+
+      if (typeUpper === 'TEXT') return false;
       const optionTexts = (q.options || [])
         .map(o => (o?.value ?? '').toString().trim())
         .filter(s => s.length > 0);
-      return optionTexts.length < 2; // 視需求改成 === 0 也行
+      return optionTexts.length < 2;
     });
-
     if (hasChoiceWithoutOptions) {
       this.selectedIndex = 1;
       alert('尚未加入選項');
       return;
     }
 
-    // 3) 組 questionList（與送出一致）
+    // 組 questionList
     const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
-      const typeUpper = (q.type || '').toUpperCase();
+      // const typeUpper = (q.type || '').toUpperCase();
+      const typeUpper =
+        (q.type || '').toLowerCase() === 'multiple' ? 'MULTI' : (q.type || '').toUpperCase();
+
       const optionTexts =
         typeUpper === 'TEXT'
           ? []
@@ -588,7 +599,7 @@ export class DialogComponent {
         questionId: idx + 1,
         question: q.optionContent ?? '',
         type: typeUpper,
-        required: !!q.isReqired,   // 保留「是否必填」的使用者設定
+        required: !!q.isReqired,
         options: optionTexts
       };
     });
@@ -598,14 +609,18 @@ export class DialogComponent {
       description: this.addQuestData.questDesc ?? '',
       startDate: this.addQuestData.startDate ?? '',
       endDate: this.addQuestData.endDate ?? '',
-      published: false,            // 草稿
+      published: false, // 草稿
       questionList
     };
+
+    // ★ 印出要送到 API 的資料
+    console.log('[Draft] postData object:', postData);
+    console.log('[Draft] postData JSON:\n', JSON.stringify(postData, null, 2));
 
     this.httpClientService.postApi(apiUrl, postData).subscribe({
       next: (res) => {
         alert('草稿已儲存');
-        this.dialogRef.close({ status: 'draftSaved', data: res }); // 儲存成功就關閉 dialog
+        this.dialogRef.close({ status: 'draftSaved', data: res });
       },
       error: (err) => {
         console.error(err);
@@ -613,6 +628,7 @@ export class DialogComponent {
       }
     });
   }
+
 
 
 

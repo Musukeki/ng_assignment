@@ -18,7 +18,6 @@
       </div>
       <button (click)="searchByFilters()">搜尋</button>
       <button class="inputBtn" (click)="clearFilters()">清除</button>
-
     </li>
   </ul>
 
@@ -44,14 +43,15 @@
       <ng-container matColumnDef="名稱">
         <th mat-header-cell *matHeaderCellDef> 名稱 </th>
         <td mat-cell *matCellDef="let element">
-          <a *ngIf="element.status == '進行中'" routerLink="" style="color: #6192c6;">{{ element.name }}</a>
-          <span *ngIf="element.status != '進行中'">{{ element.name }}</span>
+          <a *ngIf="status(element) === '進行中'" routerLink="" style="color: #6192c6;">
+            {{ element.name }}
+          </a>
+          <span *ngIf="status(element) !== '進行中'">{{ element.name }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="狀態">
         <th mat-header-cell *matHeaderCellDef> 狀態 </th>
-        <!-- <td mat-cell *matCellDef="let element"> {{element.status}} </td> -->
         <td mat-cell *matCellDef="let element"> {{ status(element) }} </td>
       </ng-container>
 
@@ -68,8 +68,10 @@
       <ng-container matColumnDef="結果">
         <th mat-header-cell *matHeaderCellDef> 結果 </th>
         <td mat-cell *matCellDef="let element">
-          <a *ngIf="element.status == '已結束'" routerLink="" style="color: rgb(143, 112, 202);">查看結果</a>
-          <span *ngIf="element.status != '已結束'">-</span>
+          <a *ngIf="status(element) === '已結束'" routerLink="" style="color: rgb(143, 112, 202);">
+            查看結果
+          </a>
+          <span *ngIf="status(element) !== '已結束'">-</span>
         </td>
       </ng-container>
 

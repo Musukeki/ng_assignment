@@ -68,21 +68,22 @@ export class AddPreviewComponent {
 
     qs.forEach((q: any, i: number) => {
       const idx = i + 1;
-      const t = (q?.type || '').toString().toUpperCase();
-      const question = (q?.question ?? '').toString().trim();
+      const tRaw = (q?.type || '').toString().toUpperCase();
+// 正規化：前端若傳 MULTIPLE，一律視為 MULTI
+const t = (tRaw === 'MULTIPLE') ? 'MULTI' : tRaw;
 
-      if (!question) errs.push(`第 ${idx} 題：題目內容為空`);
-      if (!['SINGLE', 'MULTIPLE', 'TEXT'].includes(t)) {
-        errs.push(`第 ${idx} 題：題型不正確（${t}）`);
-        return; // 題型錯就不用再檢查選項了
-      }
+if (!['SINGLE', 'MULTI', 'TEXT'].includes(t)) {
+  errs.push(`第 ${idx} 題：題型不正確（${tRaw}）`);
+  return; // 題型錯就不用再檢查選項了
+}
 
-      if (t !== 'TEXT') {
-        const opts = (q?.options || [])
-          .map((s: any) => (s ?? '').toString().trim())
-          .filter((s: string) => s.length > 0);
-        if (opts.length < 2) errs.push(`第 ${idx} 題：尚未加入選項（至少需 2 個有效選項）`);
-      }
+if (t !== 'TEXT') {
+  const opts = (q?.options || [])
+    .map((s: any) => (s ?? '').toString().trim())
+    .filter((s: string) => s.length > 0);
+  if (opts.length < 2) errs.push(`第 ${idx} 題：尚未加入選項（至少需 2 個有效選項）`);
+}
+
     });
 
     return errs;
