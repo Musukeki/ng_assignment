@@ -30,7 +30,8 @@ app-menu {
 // --------
 
 .container {
-  max-width: 768px;
+  // max-width: 768px;
+  max-width: 1024px;
   margin: 0 auto;
   padding-top: 40px;
 }
@@ -67,6 +68,32 @@ table {
     text-align: center;
   }
 }
+table[mat-table] {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* 同時打到 header 與 body 的該欄位 */
+th.mat-mdc-header-cell.cdk-column-名稱,
+td.mat-mdc-cell.cdk-column-名稱 {
+  width: 180px !important;
+  max-width: 180px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 內容是 <a>/<span> 時避免把欄位撐爆 */
+td.mat-mdc-cell.cdk-column-名稱 a,
+td.mat-mdc-cell.cdk-column-名稱 span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+
 .mat-mdc-row {
   transition: .3s;
   &:hover {

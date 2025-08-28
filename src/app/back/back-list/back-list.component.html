@@ -29,20 +29,20 @@
     <table mat-table [dataSource]="newData">
 
       <ng-container matColumnDef="選取操作">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef style="width:10%"></th>
+        <td mat-cell *matCellDef="let element" style="width:10%">
           <input type="checkbox" [(ngModel)]="element.checked" (ngModelChange)="onCheckChange(element, $event)">
         </td>
       </ng-container>
 
       <ng-container matColumnDef="編號">
-        <th mat-header-cell *matHeaderCellDef> 編號 </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        <th mat-header-cell *matHeaderCellDef style="width:10%"> 編號 </th>
+        <td mat-cell *matCellDef="let element" style="width:10%"> {{element.id}} </td>
       </ng-container>
 
       <ng-container matColumnDef="名稱">
-        <th mat-header-cell *matHeaderCellDef> 名稱 </th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef style="width:20%"> 名稱 </th>
+        <td mat-cell *matCellDef="let element" style="width:20%">
           <a *ngIf="status(element) === '進行中'" routerLink="" style="color: #6192c6;">
             {{ element.name }}
           </a>
@@ -51,27 +51,39 @@
       </ng-container>
 
       <ng-container matColumnDef="狀態">
-        <th mat-header-cell *matHeaderCellDef> 狀態 </th>
-        <td mat-cell *matCellDef="let element"> {{ status(element) }} </td>
+        <th mat-header-cell *matHeaderCellDef style="width:10%"> 狀態 </th>
+        <td mat-cell *matCellDef="let element" style="width:10%"> {{ status(element) }} </td>
       </ng-container>
 
       <ng-container matColumnDef="開始時間">
-        <th mat-header-cell *matHeaderCellDef> 開始時間 </th>
-        <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
+        <th mat-header-cell *matHeaderCellDef style="width:15%"> 開始時間 </th>
+        <td mat-cell *matCellDef="let element" style="width:15%"> {{element.startDate}} </td>
       </ng-container>
 
       <ng-container matColumnDef="結束時間">
-        <th mat-header-cell *matHeaderCellDef> 結束時間 </th>
-        <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
+        <th mat-header-cell *matHeaderCellDef style="width:15%"> 結束時間 </th>
+        <td mat-cell *matCellDef="let element" style="width:15%"> {{element.endDate}} </td>
       </ng-container>
 
       <ng-container matColumnDef="結果">
-        <th mat-header-cell *matHeaderCellDef> 結果 </th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef style="width:10%"> 結果 </th>
+        <td mat-cell *matCellDef="let element" style="width:10%">
           <a *ngIf="status(element) === '已結束'" routerLink="" style="color: rgb(143, 112, 202);">
-            查看結果
+            <img src="search.png" alt="img_search" style="display: inline-block; width: 16px; height: 16px;">
           </a>
           <span *ngIf="status(element) !== '已結束'">-</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="編輯">
+        <th mat-header-cell *matHeaderCellDef style="width:10%"> 編輯 </th>
+        <td mat-cell *matCellDef="let element" style="width:10%">
+          <a *ngIf="['尚未開始','尚未發布'].includes(status(element))" routerLink="" style="color: rgb(32, 70, 136);">
+            <img src="edit.png" alt="img_eidt" style="display: inline-block; width: 16px; height: 16px;">
+          </a>
+
+          <span *ngIf="['已結束','進行中'].includes(status(element))">-</span>
+
         </td>
       </ng-container>
 

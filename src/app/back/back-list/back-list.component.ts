@@ -24,7 +24,7 @@ import { HttpClientService } from '../../@http-clinet/http-clinet.service';
   providers: [{ provide: MatPaginatorIntl, useValue: getCustomPaginatorIntl() }]
 })
 export class BackListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['選取操作', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
+  displayedColumns: string[] = ['選取操作', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果', '編輯'];
   dataSource!: MatTableDataSource<PeriodicElement>;
   newData!: MatTableDataSource<PeriodicElement>; // 用於表格顯示
   filterStartDate!: string;
@@ -106,9 +106,9 @@ export class BackListComponent implements AfterViewInit {
 
     const i = this.selectedIds.indexOf(id);
     if (checked && i === -1) {
-      this.selectedIds.push(id);          //勾選 => 加進陣列
+      this.selectedIds.push(id);      //勾選時加進陣列
     } else if (!checked && i !== -1) {
-      this.selectedIds.splice(i, 1);      //取消 => 從陣列移除
+      this.selectedIds.splice(i, 1);  //取消勾選時從陣列移除
     }
   }
 
@@ -130,29 +130,35 @@ export class BackListComponent implements AfterViewInit {
       next: (res: any) => {
         console.log(res);
 
-        // ====== 做法 B：本地更新表格 ======
-        const toDelete = new Set(this.selectedIds);
+        // 只有後端回成功才動前端資料
+        if (res?.code === 200) {
+          const toDelete = new Set(this.selectedIds);
 
-        // 1) 更新本地資料源（service 裡那份）
-        this.sourceDataService.sourceData =
-          this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
+          // 1) 更新本地資料
+          this.sourceDataService.sourceData =
+            this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
 
-        // 2) 重建 MatTableDataSource + 重新掛 paginator（很重要）
-        this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
-        this.newData   = new MatTableDataSource(this.sourceDataService.sourceData);
-        this.newData.paginator = this.paginator;
+          // 2) 重建表格並重新掛分頁器
+          this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
+          this.newData    = new MatTableDataSource(this.sourceDataService.sourceData);
+          this.newData.paginator = this.paginator;
 
-        // 3) 清空勾選狀態避免殘留
-        this.selectedIds = [];
-        this.newData.data.forEach((row: any) => row.checked = false);
-        // ==================================
+          // 3) 清空勾選狀態
+          this.selectedIds = [];
+          this.newData.data.forEach((row: any) => row.checked = false);
+        } else {
+          // 後端阻擋（例如已開始不可刪）→ 不改前端資料
+          alert(res?.message || '刪除失敗');
+        }
       },
       error: (err) => {
         console.error(err);
-        alert('刪除失敗');
+        alert(err?.error?.message || '刪除失敗');
+        // 同樣不改前端資料與勾選狀態
       }
     });
   }
+
 
 
   // onDeleteClick() {
