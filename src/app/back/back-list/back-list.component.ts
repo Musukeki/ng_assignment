@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SourceDataService } from '../../@services/source-data.service';
 import type { PeriodicElement } from '../../@services/source-data.service'; // ★ 用 service 裡的型別，避免型別衝突
 import { MatButtonModule } from '@angular/material/button';
@@ -35,7 +35,8 @@ export class BackListComponent implements AfterViewInit {
 
   constructor(
     private sourceDataService: SourceDataService,
-    private httpClientService: HttpClientService
+    private httpClientService: HttpClientService,
+    private router: Router
   ) { }
 
   // === 狀態計算（優先判斷草稿，再判斷時間）===
@@ -159,42 +160,6 @@ export class BackListComponent implements AfterViewInit {
     });
   }
 
-
-
-  // onDeleteClick() {
-  //   if (this.selectedIds.length === 0) {
-  //     alert('請先勾選要刪除的問卷');
-  //     return;
-  //   }
-
-  //   const params = this.selectedIds.map(id => `quizId=${id}`).join('&');
-  //   const deleteUrl = `http://localhost:8080/quiz/delete?${params}`;
-
-  //   this.httpClientService.postApi(deleteUrl, null).subscribe({
-  //     next: () => {
-  //       const toDelete = new Set(this.selectedIds);
-
-  //       // 1) 更新本地資料源
-  //       this.sourceDataService.sourceData =
-  //         this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
-
-  //       // 2) 重建表格資料 + 重新掛 paginator（很重要）
-  //       this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
-  //       this.newData   = new MatTableDataSource(this.sourceDataService.sourceData);
-  //       this.newData.paginator = this.paginator;
-
-  //       // 3) 清空勾選
-  //       this.selectedIds = [];
-  //     },
-  //     error: (err) => {
-  //       console.error(err);
-  //       alert('刪除失敗');
-  //     }
-  //   });
-  // }
-
-
-
   refreshTable() {
     const rawData = this.sourceDataService.sourceData;
     this.dataSource = new MatTableDataSource(rawData);
@@ -246,16 +211,22 @@ export class BackListComponent implements AfterViewInit {
   private loadListFromServer() {
     const apiUrl = `http://localhost:8080/quiz/getAll`;
     this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
-      const raw: PeriodicElement[] = res.quizList || [];
+
+      console.log(res)
+      const raw: PeriodicElement[] = res.questionList || [];
 
       this.sourceDataService.sourceData = raw;
 
       this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
       this.newData = new MatTableDataSource(this.sourceDataService.sourceData);
-      this.newData.paginator = this.paginator; // ★ 重要：重建資料來源後要重新指定 paginator
+      this.newData.paginator = this.paginator; // 重建資料來源後要重新指定 paginator
 
       console.log(this.newData.data);
     });
+  }
+
+  goToEditPage(quizId: any) {
+    this.router.navigate(['/backEdit', quizId]);
   }
 }
 

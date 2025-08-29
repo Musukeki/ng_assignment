@@ -78,7 +78,8 @@
       <ng-container matColumnDef="編輯">
         <th mat-header-cell *matHeaderCellDef style="width:10%"> 編輯 </th>
         <td mat-cell *matCellDef="let element" style="width:10%">
-          <a *ngIf="['尚未開始','尚未發布'].includes(status(element))" routerLink="" style="color: rgb(32, 70, 136);">
+          <!-- [routerLink]="['/back/backEdit', element.id]" 可以直接帶值跳轉頁面 -->
+          <a *ngIf="['尚未開始','尚未發布'].includes(status(element))" [routerLink]="['/back/backEdit', element.id]" style="color: rgb(32, 70, 136);">
             <img src="edit.png" alt="img_eidt" style="display: inline-block; width: 16px; height: 16px;">
           </a>
 
