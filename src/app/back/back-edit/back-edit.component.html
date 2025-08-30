@@ -59,17 +59,31 @@
     問卷說明：<textarea [(ngModel)]="quizData.description"></textarea>
   </li>
   <li>
-    開始時間：<input type="date" [(ngModel)]="quizData.startDate">
-    結束時間：<input type="date" [(ngModel)]="quizData.endDate">
+    開始時間：
+    <input
+      type="date"
+      [(ngModel)]="quizData.startDate"
+      [min]="today"
+      (ngModelChange)="onStartDateChange($event)"
+    >
+    結束時間：
+    <input
+      type="date"
+      [(ngModel)]="quizData.endDate"
+      [min]="quizData.startDate || today"
+      (ngModelChange)="onEndDateChange($event)"
+    >
   </li>
+
 
   <li style="margin-top: 8px;">
     @for (ques of quizData.questionList; track $index; let qi = $index) {
       <ul style="margin-bottom: 16px;">
-        <li>{{ ques.questionId }}. {{ ques.question }}</li>
+        <!-- <li>{{ ques.questionId }}. {{ ques.question }}</li> -->
+        <li>{{ ques.questionId }}. <input type="text" [(ngModel)]="ques.question"></li>
 
         <li>題目類型：
-          <select [(ngModel)]="ques.type">
+          <select [(ngModel)]="ques.type" (ngModelChange)="ensureMinOptions(qi, $event)">
             <option value="SINGLE">單選題</option>
             <option value="MULTI">多選題</option>
             <option value="TEXT">文字輸入</option>
@@ -119,3 +133,4 @@
 
 
 <button (click)="showData()">console</button>
+<button (click)="submit()">送出</button>
