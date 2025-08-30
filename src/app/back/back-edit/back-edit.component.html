@@ -1,56 +1,3 @@
-<!-- <ul>
-  <li>
-    問卷標題：<input type="text" value="{{quizData.name}}">
-  </li>
-  <li>
-    問卷說明：<textarea name="" id="">{{quizData.description}}</textarea>
-  </li>
-  <li>
-    開始時間：<input type="date" name="" id="" value="{{quizData.startDate}}">
-    結束時間：<input type="date" name="" id="" value="{{quizData.endDate}}">
-  </li>
-  <li style="margin-top: 8px;">
-    @for(ques of quizData.questionList; track $index) {
-    <ul style="margin-bottom: 16px;">
-      <li>{{ques.questionId}}.{{ques.question}}</li>
-      <li>題目類型：
-        <select name="" id="" [(ngModel)]="ques.type">
-          <option value="SINGLE">單選題</option>
-          <option value="MULTI">多選題</option>
-          <option value="TEXT">文字輸入</option>
-        </select>
-      </li>
-      <li>必填：
-        <input *ngIf="ques.required" type="checkbox" checked name="" id="">
-        <input *ngIf="!ques.required" type="checkbox" name="" id="">
-      </li>
-      <li>
-
-        <ul *ngIf="ques.type !== 'TEXT'">
-          選項：
-          @for(option of ques.options; track $index; let i = $index) {
-          <li>
-            <input type="text" [(ngModel)]="ques.options[i]">
-            <button type="button" (click)="removeOption(qi, i)">刪除</button>
-          </li>
-        }
-
-        <button type="button" (click)="addOption(qi)">＋</button>
-        </ul>
-
-        <ul *ngIf="ques.type === 'TEXT'">
-          文字內容：
-          <li>
-            <textarea name="" id=""></textarea>
-          </li>
-        </ul>
-
-      </li>
-    </ul>
-    }
-  </li>
-</ul> -->
-
 <ul>
   <li>
     問卷標題：<input type="text" [(ngModel)]="quizData.name">
@@ -130,7 +77,13 @@
 </select>
 <button type="button" (click)="addQuestionAt()">新增問題</button>
 
+<br>
+<br>
 
+<!-- <button (click)="showData()">console</button> -->
+<button routerLink="/back/backList">返回</button>
+<button *ngIf="canShowRelease" type="button" (click)="release()">發布</button>
+<button (click)="save()">
+  {{ quizData?.published === false ? '儲存草稿' : '儲存變更' }}
+</button>
 
-<button (click)="showData()">console</button>
-<button (click)="submit()">送出</button>

@@ -114,14 +114,27 @@ export class BackListComponent implements AfterViewInit {
   }
 
   onDeleteClick() {
-    let deleteUrl = `http://localhost:8080/quiz/delete?`;
     if (this.selectedIds.length === 0) {
       alert('請先勾選要刪除的問卷');
       return;
     }
-    console.log('要刪除的問卷編號：', this.selectedIds);
 
-    // 你原本的寫法（保留）
+    // 找出被勾選的資料列
+    const selectedRows = this.sourceDataService.sourceData
+      .filter(row => this.selectedIds.includes(row.id));
+
+    // 找出「進行中」的問卷 id
+    const runningIds = selectedRows
+      .filter(row => this.status(row) === '進行中')
+      .map(row => row.id);
+
+    if (runningIds.length > 0) {
+      alert(`您選擇的問卷 ${runningIds.join(',')} 正在進行中，目前無法刪除！`);
+      return;
+    }
+
+    // ---- 通過檢查，才組 URL 並呼叫後端 ----
+    let deleteUrl = `http://localhost:8080/quiz/delete?`;
     this.selectedIds.forEach((item) => {
       deleteUrl += `&quizId=${item}`;
     });
@@ -131,34 +144,30 @@ export class BackListComponent implements AfterViewInit {
       next: (res: any) => {
         console.log(res);
 
-        // 只有後端回成功才動前端資料
         if (res?.code === 200) {
           const toDelete = new Set(this.selectedIds);
 
-          // 1) 更新本地資料
           this.sourceDataService.sourceData =
             this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
 
-          // 2) 重建表格並重新掛分頁器
           this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
           this.newData    = new MatTableDataSource(this.sourceDataService.sourceData);
           this.newData.paginator = this.paginator;
 
-          // 3) 清空勾選狀態
           this.selectedIds = [];
           this.newData.data.forEach((row: any) => row.checked = false);
         } else {
-          // 後端阻擋（例如已開始不可刪）→ 不改前端資料
           alert(res?.message || '刪除失敗');
         }
       },
       error: (err) => {
         console.error(err);
         alert(err?.error?.message || '刪除失敗');
-        // 同樣不改前端資料與勾選狀態
       }
     });
   }
+
+
 
   refreshTable() {
     const rawData = this.sourceDataService.sourceData;

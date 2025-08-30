@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { HttpClientService } from '../../@http-clinet/http-clinet.service';
 import { SourceDataService } from '../../@services/source-data.service';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-back-edit',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   standalone: true,
   templateUrl: './back-edit.component.html',
   styleUrl: './back-edit.component.scss'
@@ -22,6 +22,7 @@ export class BackEditComponent {
     private sourceDataService: SourceDataService,
     private httpClientService: HttpClientService,
     private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   // ######## 取得列表頁點擊的問卷內容
@@ -34,6 +35,7 @@ export class BackEditComponent {
       this.quizData.quizId = quizId;
       this.quizData.name = res.quiz.name;
       this.quizData.description = res.quiz.description;
+      this.quizData.published = !!res.quiz.published;
       this.quizData.startDate = res.quiz.startDate;
       this.quizData.endDate = res.quiz.endDate;
       // ▼ 日期格式/邏輯入口修正（只動日期）
@@ -91,14 +93,7 @@ export class BackEditComponent {
     q.options.push(''); // 新增一個空白選項輸入框
   }
 
-  // removeOption(qi: number, i: number) {
-  //   const q = this.quizData.questionList[qi];
-  //   if (Array.isArray(q.options)) {
-  //     q.options.splice(i, 1);
-  //   }
-  // }
-
-  // 插入位置（第幾題之前），進頁面後我會在 getEditData() 設成最後一題之後
+  // 插入位置
   insertPos: number = 1;
 
   // 插入一題到 insertPos（1-based）
@@ -186,7 +181,6 @@ export class BackEditComponent {
         type: q.type,
         required: !!q.required,
       };
-
       if (q.type === 'TEXT') {
         // TEXT 題型：沒有選項 → 傳空陣列
         return {
@@ -208,6 +202,7 @@ export class BackEditComponent {
       description: this.quizData.description ?? '',
       startDate: this.quizData.startDate ?? '',
       endDate: this.quizData.endDate ?? '',
+      published: !!this.quizData.published,
       questionList: ql
     };
   }
@@ -302,28 +297,76 @@ private validateQuiz(): string {
   }
 
 
-  submit() {
+  save() {
     const msg = this.validateQuiz();
     if (msg) {
       alert(msg);
       return;
     }
 
-    // 通過驗證: 組 payload
+    // 通過驗證: 組 payload :DDDDDDDDDDDDDDD
     const payload = this.getCleanPayloadForSave();
     console.log('update data', payload);
 
-    alert('驗證成功，已在 console.log 輸出 payload');
+    const postUrl = `http://localhost:8080/quiz/update`;
+    this.httpClientService.postApi(postUrl, payload).subscribe((res: any) => {
+
+      console.log(res);
+    })
+
+    alert('更新成功!');
+
+    this.router.navigateByUrl('/back/backList');
   }
 
+// 只有「未發布」才顯示發布按鈕
+get canShowRelease(): boolean {
+  return this.quizData?.published === false; // 僅在明確為 false 時顯示
+}
 
-
-
-  showData() {
-    const payload = this.getCleanPayloadForSave();
-    console.log(payload);
-    // this.httpClientService.postApi('/quiz/save', payload).subscribe(...)
+release() {
+  // 照你的既有驗證（避免送出空題目等）
+  const msg = this.validateQuiz();
+  if (msg) {
+    alert(msg);
+    return;
   }
+
+  // 已發布就不做
+  if (!this.canShowRelease) {
+    alert('此問卷已發布或尚未載入完成，無法再次發布。');
+    return;
+  }
+
+  // 標記為已發布
+  this.quizData.published = true;
+
+  // 組 payload（沿用你的 getCleanPayloadForSave，再補 published: true）
+  const payload = {
+    ...this.getCleanPayloadForSave(),
+    published: true
+  };
+
+  console.log('release payload', payload);
+
+  const postUrl = `http://localhost:8080/quiz/update`; // 若有 /quiz/release 就換那個
+  this.httpClientService.postApi(postUrl, payload).subscribe({
+    next: (res: any) => {
+      console.log(res);
+      alert('發布成功！');
+      this.router.navigateByUrl('/back/backList');
+    },
+    error: (err) => {
+      console.error(err);
+      alert(err?.error?.message || '發布失敗');
+      // 失敗回復狀態
+      this.quizData.published = false;
+    }
+  });
+}
+
+
+
 
   ngOnInit() {
     this.getEditData()
