@@ -1,25 +1,45 @@
-<app-menu></app-menu>
+<!-- <app-menu></app-menu> -->
 
-<div class="container">
-  <!-- 上方搜尋欄 -->
-  <ul class="topbar">
-    <li>
-      <p>問卷名稱</p>
-      <input placeholder="請輸入問券名稱關鍵字" [(ngModel)]="inputContent" (ngModelChange)="searchByFilters()">
+<nav class="nav">
+  <ul class="nav_list">
+    <li class="">
+      <div class="search">
+        <input placeholder="請輸入問卷名稱" [(ngModel)]="inputContent" (ngModelChange)="searchByFilters()">
+        <div>
+          <img src="search_black.png" alt="search_img">
+        </div>
+      </div>
     </li>
-    <li>
-      <div>
-        <p>開始時間</p>
-        <input type="date" [(ngModel)]="filterStartDate">
-      </div>
-      <div>
-        <p>結束時間</p>
-        <input type="date" [(ngModel)]="filterEndDate">
-      </div>
-      <button (click)="searchByFilters()">搜尋</button>
-      <button class="inputBtn" (click)="clearFilters()">清除</button>
+    <li class="nav_icon">
+      <img style="width: 28px; height: 28px;" src="home.png" alt="回首頁">
+      <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出">
     </li>
   </ul>
+</nav>
+<div class=" topbar_bg">
+  <div class="container">
+    <ul class="topbar">
+      <li class="topbar_date">
+        <div style="width: 308px;">
+          <p>開始日期</p>
+          <input type="date" [(ngModel)]="filterStartDate" style="margin-right: 24px;">
+        </div>
+        <div>
+          <p>結束日期</p>
+          <input type="date" [(ngModel)]="filterEndDate" style="width: 300px;">
+        </div>
+      </li>
+      <li class="topbar_btn">
+        <div>
+          <button (click)="searchByFilters()">搜尋</button>
+          <button class="inputBtn" (click)="clearFilters()" style="margin-left: 12px;">清除</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="container list">
+  <!-- 上方搜尋欄 -->
 
   <button class="baseBtn" style="margin-right: 4px; color: #fff;" matButton (click)="openDialog()">新增</button>
   <button class="baseBtn" style="color: #fff;" (click)="onDeleteClick()">刪除</button>
@@ -31,7 +51,7 @@
       <ng-container matColumnDef="選取操作">
         <th mat-header-cell *matHeaderCellDef style="width:10%"></th>
         <td mat-cell *matCellDef="let element" style="width:10%">
-          <input type="checkbox" [(ngModel)]="element.checked" (ngModelChange)="onCheckChange(element, $event)">
+          <input style="width: 18px; height: 18px; accent-color: #4086c7; cursor: pointer;"  type="checkbox" [(ngModel)]="element.checked" (ngModelChange)="onCheckChange(element, $event)">
         </td>
       </ng-container>
 
@@ -43,7 +63,7 @@
       <ng-container matColumnDef="名稱">
         <th mat-header-cell *matHeaderCellDef style="width:20%"> 名稱 </th>
         <td mat-cell *matCellDef="let element" style="width:20%">
-          <a *ngIf="status(element) === '進行中'" routerLink="" style="color: #6192c6;">
+          <a *ngIf="status(element) === '進行中'" routerLink="" style="color: #34699A;">
             {{ element.name }}
           </a>
           <span *ngIf="status(element) !== '進行中'">{{ element.name }}</span>
@@ -55,13 +75,13 @@
         <td mat-cell *matCellDef="let element" style="width:10%"> {{ status(element) }} </td>
       </ng-container>
 
-      <ng-container matColumnDef="開始時間">
-        <th mat-header-cell *matHeaderCellDef style="width:15%"> 開始時間 </th>
+      <ng-container matColumnDef="開始日期">
+        <th mat-header-cell *matHeaderCellDef style="width:15%"> 開始日期 </th>
         <td mat-cell *matCellDef="let element" style="width:15%"> {{element.startDate}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="結束時間">
-        <th mat-header-cell *matHeaderCellDef style="width:15%"> 結束時間 </th>
+      <ng-container matColumnDef="結束日期">
+        <th mat-header-cell *matHeaderCellDef style="width:15%"> 結束日期 </th>
         <td mat-cell *matCellDef="let element" style="width:15%"> {{element.endDate}} </td>
       </ng-container>
 
@@ -79,7 +99,7 @@
         <th mat-header-cell *matHeaderCellDef style="width:10%"> 編輯 </th>
         <td mat-cell *matCellDef="let element" style="width:10%">
           <!-- [routerLink]="['/back/backEdit', element.id]" 可以直接帶值跳轉頁面 -->
-          <a *ngIf="['尚未開始','尚未發布'].includes(status(element))" [routerLink]="['/back/backEdit', element.id]" style="color: rgb(32, 70, 136);">
+          <a *ngIf="['尚未開始','尚未發布'].includes(status(element))" [routerLink]="['/back/backEdit', element.id]" style="color: #007185;">
             <img src="edit.png" alt="img_eidt" style="display: inline-block; width: 16px; height: 16px;">
           </a>
 
@@ -92,7 +112,10 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.data-result]="row.id"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
 </div>
+
+<footer>
+</footer>

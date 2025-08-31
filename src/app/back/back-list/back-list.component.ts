@@ -24,7 +24,7 @@ import { HttpClientService } from '../../@http-clinet/http-clinet.service';
   providers: [{ provide: MatPaginatorIntl, useValue: getCustomPaginatorIntl() }]
 })
 export class BackListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['選取操作', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果', '編輯'];
+  displayedColumns: string[] = ['選取操作', '編號', '名稱', '狀態', '開始日期', '結束日期', '結果', '編輯'];
   dataSource!: MatTableDataSource<PeriodicElement>;
   newData!: MatTableDataSource<PeriodicElement>; // 用於表格顯示
   filterStartDate!: string;

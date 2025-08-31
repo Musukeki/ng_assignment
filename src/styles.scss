@@ -1,51 +1,67 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
 html {
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme((color: (theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
 }
-@import url('reset.scss');
-@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
-*,*::before,::after {
+@import url('reset.scss');
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&family=Noto+Sans+TC:wght@100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+*,
+*::before,
+::after {
   box-sizing: border-box;
   line-height: 1.25;
 }
+
 body {
   font-family: "Work Sans", "LXGW WenKai Mono TC", sans-serif;
+
+  color: #000;
+  // background: url("https://www.cnblogs.com/skins/coffee/images/bg_body.gif") left top;
+  background: #f1f4ff;
+  font-size: 9pt;
+  min-height: 101%;
+  line-height: 1.5;
 }
+
 a {
   text-decoration: none;
   // color: #000;
 }
+
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-h1,h2,h3,h4,h5,h6 {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 :root {
-  @include mat.tabs-overrides((
-    active-focus-indicator-color: #578FCA,
-    active-focus-label-text-color: #578FCA,
-  ));
+  @include mat.tabs-overrides((active-focus-indicator-color: #578FCA,
+      active-focus-label-text-color: #578FCA,
+    ));
 }
 
 input:focus {
@@ -68,9 +84,10 @@ button {
   border-radius: 0;
   padding: 8px;
   cursor: pointer;
-  background-color: #578FCA;
-  opacity: .8;
+  background-color: #34699A;
+  // opacity: .8;
   transition: .3s;
+
   &:hover {
     background-color: #8caed2;
   }
