@@ -11,8 +11,9 @@
       </div>
     </li>
     <li class="nav_icon">
-      <img style="width: 28px; height: 28px;" src="home.png" alt="回首頁">
-      <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出">
+      <img style="width: 28px; height: 28px;" src="add_quiz.png" alt="新增問卷" matButton (click)="openDialog()">
+      <img style="width: 28px; height: 28px; margin-left: 16px;" src="user.png" alt="登入資訊">
+      <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出" (click)="checkToLogout('/login')">
     </li>
   </ul>
 </nav>

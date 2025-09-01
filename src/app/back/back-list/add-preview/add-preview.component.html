@@ -1,4 +1,82 @@
-<div style="padding: 24px; background-color: #c5c5c5; width: 80%; margin: 0 auto;">
+<div class="container">
+  <div class="quiz">
+    <div class="quiz_head">
+      <div class="quiz_title">
+        <h1>{{ name }}</h1>
+        <div class="quiz_description">{{description}}</div>
+      </div>
+      <div class="quiz_date">
+        <span>開放期間：</span>
+        <span>{{startDate}}</span>～
+        <span>{{endDate}}</span>
+      </div>
+    </div>
+
+    <div class="quiz_user">
+      <ul>
+        <li>
+          <span class="user_dec">填寫者姓名</span>
+          <label for="name">
+            <input type="text" name="name" value="麥克米勒" readonly>
+          </label>
+        </li>
+        <li>
+          <span class="user_dec">聯絡電話</span>
+          <label for="phone">
+            <input type="text" name="phone" value="09-00123456" readonly>
+          </label>
+        </li>
+        <li>
+          <span class="user_dec">電子信箱</span>
+          <label for="email">
+            <input type="text" name="email" value="abc001@gmail.com" readonly>
+          </label>
+        </li>
+        <li>
+          <span class="user_dec">年齡</span>
+          <label for="age">
+            <input type="text" name="age" value="18" readonly>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div class="ques">
+      @for (item of questionList; track $index) {
+      <ul>
+        <li class="ques_title_group">
+          <span class="ques_id">{{item.questionId}}</span>
+          <p class="ques_title">{{item.question}}
+            <span *ngIf="item.type === 'MULTI'">(複選)</span>
+            <span *ngIf="item.required=== true" style="color: rgb(189, 79, 79);">*</span>
+          </p>
+        </li>
+
+        <li class="ques_answer_group" style="border-bottom: 1px #34699A solid;">
+          <ul>
+            @for (item1 of item.options; track $index; let i = $index) {
+            <li *ngIf="item.type === 'SINGLE'" class="ques_option">
+              <input type="radio" readonly><span>{{ item1 }}</span>
+            </li>
+            <li *ngIf="item.type === 'MULTI'" class="ques_option">
+              <input type="checkbox"><span>{{ item1 }}</span>
+            </li>
+          }
+          <li *ngIf="item.type === 'TEXT'" class="ques_option">
+            <textarea name="" id="" cols="30" rows="3" readonly placeholder="請輸入內容"></textarea>
+          </li>
+          </ul>
+        </li>
+      </ul>
+      }
+    </div>
+    <footer class="quiz_footer"></footer>
+  </div>
+</div>
+
+
+<!--
+<div style="margin-top: 50px; padding: 24px; background-color: #c5c5c5; width: 80%; margin: 0 auto;">
   <p>問卷標題：{{ name }}</p>
   <p>問卷說明：{{ description }}</p>
   <p>開始時間：{{ startDate }}</p>
@@ -21,4 +99,4 @@
     </li>
   </ul>
   }
-</div>
+</div> -->

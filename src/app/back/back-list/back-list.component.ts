@@ -237,7 +237,12 @@ export class BackListComponent implements AfterViewInit {
   goToEditPage(quizId: any) {
     this.router.navigate(['/backEdit', quizId]);
   }
+
+  checkToLogout(url: string) {
+    this.router.navigate([url]);
+  }
 }
+
 
 // mat-paginator
 export function getCustomPaginatorIntl(): MatPaginatorIntl {

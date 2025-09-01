@@ -1,0 +1,124 @@
+.container {
+  width: 960px;
+  border: 1px solid #000;
+  margin: 40px auto 0;
+  background-color: #faf9fd;
+  padding: 24px 12px 24px 24px;
+}
+
+input,
+textarea {
+  border: 1px solid #000;
+  padding: 4px 6px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.text_dec {
+  background: #34699A;
+  color: #fff;
+  padding: 2px;
+}
+
+.text_dec_ques {
+  background: #febd69;
+  color: #000;
+  padding: 2px;
+}
+
+.question-pane {
+  width: 50%;
+  height: 520px;
+  /* 固定高度；想用視窗比例可改成 calc(100vh - 240px) */
+  overflow-y: auto;
+  /* 垂直捲軸 */
+  padding-right: 8px;
+  /* 避免內容貼到捲軸 */
+  box-sizing: border-box;
+  /* 可選：讓捲軸空間穩定，避免內容跳動 */
+  scrollbar-gutter: stable both-edges;
+  scroll-behavior: smooth;
+}
+
+
+.left-pane {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  /* 重點：和 .question-pane 高度對齊 */
+}
+
+.left-pane .actions {
+  margin-top: auto;
+  /* 重點：靠下 */
+}
+
+.add_select_txt, .add_ques_location {
+  border: 1px solid #000;
+  padding: 2px;
+  font-size: 13px;
+  font-weight: 350;
+}
+.add_select_group {
+  border-radius: 0;
+  padding: 1px;
+  margin-left: -1px;
+  &:focus {
+    outline: none;
+  }
+}
+
+.add_ques {
+  border: 1px solid #3e8d6c;
+  color: #fff;
+  background-color: #3e8d6c;
+  line-height: 1.5;
+  border-radius: 4px;
+  transition: .3s;
+  &:hover {
+    border: 1px solid #37775c;
+    background-color: #37775c;
+  }
+}
+.check_bg {
+  width: 18px;
+  height: 18px;
+  accent-color: #34699A;
+}
+.backBtn {
+  margin-right: 8px;
+}
+.releaseBtn {
+  margin-right: 8px;
+}
+.saveBrn {
+
+}
+
+/* 可選：美化 WebKit 捲軸（Chrome/Edge/Safari） */
+.question-pane::-webkit-scrollbar {
+  width: 10px;
+}
+
+.question-pane::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.question-pane::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 8px;
+  border-radius: 0;
+}
+
+.question-pane::-webkit-scrollbar-thumb:hover {
+  background: #a7a7a7;
+}
+
+/* 父層為 flex 時，避免兩側被強制拉到同高 */
+.container>div {
+  align-items: flex-start;
+}
+

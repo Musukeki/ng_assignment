@@ -61,7 +61,7 @@
               <option value="text">文字輸入</option>
             </select>
           </li>
-          <li>
+          <li style="display: flex; align-items: center;">
             <span>是否必填</span>
             <input type="checkbox" [(ngModel)]="addQuestData.addContent.isReqired">
           </li>
@@ -127,17 +127,17 @@
           <thead>
             <tr>
               <th width="5%"></th>
-              <th width="40%">提問內容</th>
-              <th width="20%">題目類型</th>
-              <th width="20%">是否必填</th>
-              <th width="15%">刪除</th>
+              <th width="40%" style="font-weight: 500;">提問內容</th>
+              <th width="20%" style="font-weight: 500;">題目類型</th>
+              <th width="20%" style="font-weight: 500;">是否必填</th>
+              <th width="15%" style="font-weight: 500;">刪除</th>
             </tr>
           </thead>
 
           <tbody id="questSetListTbody">
             @if (addQuestData.questOptions.length === 0) {
               <tr>
-                <td colspan="5" style="text-align:center;color:#888;">尚未新增題目</td>
+                <td colspan="5" style="text-align:center;color:#888;">尚未新增問題</td>
               </tr>
             } @else {
               @for (option of addQuestData.questOptions; track option.id; let i = $index) {
@@ -155,7 +155,7 @@
                       src="delete.png"
                       alt="delete_img"
                       (click)="deleteQuestion(i)"
-                      style="width:16px;height:16px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);cursor:pointer;"
+                      style="width: 14px !important; opacity: .8;; height:14px !important;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);cursor:pointer;"
                     >
                   </td>
                 </tr>

@@ -1,89 +1,96 @@
-<ul>
-  <li>
-    問卷標題：<input type="text" [(ngModel)]="quizData.name">
-  </li>
-  <li>
-    問卷說明：<textarea [(ngModel)]="quizData.description"></textarea>
-  </li>
-  <li>
-    開始時間：
-    <input
-      type="date"
-      [(ngModel)]="quizData.startDate"
-      [min]="today"
-      (ngModelChange)="onStartDateChange($event)"
-    >
-    結束時間：
-    <input
-      type="date"
-      [(ngModel)]="quizData.endDate"
-      [min]="quizData.startDate || today"
-      (ngModelChange)="onEndDateChange($event)"
-    >
-  </li>
+<div class="container">
+  <div style="display: flex; align-items: stretch;">
+    <ul class="left-pane" style="width: 50%; display: flex; flex-direction: column;">
+      <li style="margin-bottom: 16px;">
+        <span class="text_dec">問卷標題</span><br>
+        <input style="width: 360px;" type="text" [(ngModel)]="quizData.name">
+      </li>
+      <li style="margin-bottom: 16px;">
+        <span class="text_dec">問卷說明</span><br>
+        <textarea rows="5" cols="48" [(ngModel)]="quizData.description"></textarea>
+      </li>
+      <li style="display: flex; margin-bottom: 24px;">
+        <div style="margin-right: 16px;">
+          <span class="text_dec">開始時間</span><br>
+          <input type="date" [(ngModel)]="quizData.startDate" [min]="today" (ngModelChange)="onStartDateChange($event)">
+        </div>
+        <div>
+          <span class="text_dec">結束時間</span><br>
+          <input type="date" [(ngModel)]="quizData.endDate" [min]="quizData.startDate || today"
+            (ngModelChange)="onEndDateChange($event)">
+        </div>
+      </li>
+      <li>
+        <button class="add_ques" type="button" (click)="addQuestionAt()" style="margin-right: 16px;">新增問題</button>
+        <span class="add_select_txt">新增位置</span>
+        <select class="add_select_group" [(ngModel)]="insertPos">
+          @for (pos of [].constructor((quizData?.questionList?.length || 0) + 1); track $index; let i = $index) {
+          <option [value]="i + 1">{{ i + 1 }}</option>
+          }
+        </select>
+      </li>
 
+      <li class="actions" style="margin-top: auto;">
 
-  <li style="margin-top: 8px;">
-    @for (ques of quizData.questionList; track $index; let qi = $index) {
-      <ul style="margin-bottom: 16px;">
-        <!-- <li>{{ ques.questionId }}. {{ ques.question }}</li> -->
-        <li>{{ ques.questionId }}. <input type="text" [(ngModel)]="ques.question"></li>
+        <!-- <button (click)="showData()">console</button> -->
+        <button class="backBtn" routerLink="/back/backList">返回</button>
+        <button class="releaseBtn" *ngIf="canShowRelease" type="button" (click)="release()">發布</button>
+        <button class="saveBrn" (click)="save()">
+          {{ quizData?.published === false ? '儲存草稿' : '儲存變更' }}
+        </button>
+      </li>
+    </ul>
 
-        <li>題目類型：
-          <select [(ngModel)]="ques.type" (ngModelChange)="ensureMinOptions(qi, $event)">
-            <option value="SINGLE">單選題</option>
-            <option value="MULTI">多選題</option>
-            <option value="TEXT">文字輸入</option>
-          </select>
-        </li>
+    <ul class="question-pane" #questionPane>
+      <li>
+        @for (ques of quizData.questionList; track $index; let qi = $index) {
+        <ul style="margin-bottom: 16px; position: relative;">
+          <!-- <li>{{ ques.questionId }}. {{ ques.question }}</li> -->
+          <li style="margin-bottom: 16px;"><span class="text_dec_ques">No. {{ ques.questionId }}</span><br> <input type="text" style="width: 300px;" placeholder="請輸入問題" [(ngModel)]="ques.question"></li>
 
-        <li>必填：
-          <!-- 用一個 checkbox + 綁定就好 -->
-          <input type="checkbox" [(ngModel)]="ques.required">
-        </li>
+          <li style="display: flex; align-items: center; margin-bottom: 16px;">
+            <span class="add_ques_location" >題目類型</span>
+            <select class="add_select_group" style="padding: 1.6px; margin-right: 16px;" [(ngModel)]="ques.type" (ngModelChange)="ensureMinOptions(qi, $event)">
+              <option value="SINGLE">單選題</option>
+              <option value="MULTI">多選題</option>
+              <option value="TEXT">文字輸入</option>
+            </select>
 
-        <li>
-          @if (ques.type !== 'TEXT') {
-            <div>
-              選項：
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: 13px; font-weight: 350; padding-top: 2px;">必填</span>
+              <input class="check_bg" style=" width: 15px; height: 15px; border: 1px solid #000; border-radius: 0; background: #34699A;" type="checkbox" [(ngModel)]="ques.required">
+            </div>
+          </li>
+
+          <li>
+            @if (ques.type !== 'TEXT') {
+            <div style="display: flex; flex-direction: column; width: 276px;">
+              <div>
+                <span style="background-color: #ababab; padding: 2px; color: #fff;">選項</span>
+              </div>
               <ul>
                 @for (option of ques.options; track $index; let i = $index) {
-                  <li>
-                    <input type="text" [(ngModel)]="ques.options[i]">
-                    <button type="button" (click)="removeOption(qi, i)">Ｘ</button>
-                  </li>
+                <li>
+                  <input style="width: 240px; margin-bottom: 4px; margin-right: 8px" type="text" placeholder="請輸入選項內容" [(ngModel)]="ques.options[i]">
+                  <button type="button" (click)="removeOption(qi, i)">－</button>
+                </li>
                 }
               </ul>
               <button type="button" (click)="addOption(qi)">＋</button>
             </div>
-          } @else {
-            <div>
-              文字內容：
+            }
+            @else {
+            <!-- <div style="display: flex; flex-direction: column; width: 276px;">
+              文字內容
               <textarea [(ngModel)]="ques.textAnswer"></textarea>
-            </div>
-          }
-          <button type="button" (click)="removeQuestion(qi)">刪除此題</button>
-        </li>
-      </ul>
-    }
-  </li>
-</ul>
-
-<span>新增位置：</span>
-<select [(ngModel)]="insertPos">
-  @for (pos of [].constructor((quizData?.questionList?.length || 0) + 1); track $index; let i = $index) {
-    <option [value]="i + 1">{{ i + 1 }}</option>
-  }
-</select>
-<button type="button" (click)="addQuestionAt()">新增問題</button>
-
-<br>
-<br>
-
-<!-- <button (click)="showData()">console</button> -->
-<button routerLink="/back/backList">返回</button>
-<button *ngIf="canShowRelease" type="button" (click)="release()">發布</button>
-<button (click)="save()">
-  {{ quizData?.published === false ? '儲存草稿' : '儲存變更' }}
-</button>
-
+            </div> -->
+            }
+            <!-- <button type="button" style="position: absolute; right: 0; top: 0;" (click)="removeQuestion(qi)">刪除此題</button> -->
+            <img src="delete.png" style="cursor: pointer; width: 16px; height: 16px; display: inline-block; padding: 0; position: absolute; right: 100px; top: 20.5px;" (click)="removeQuestion(qi)" alt="delete_icon">
+          </li>
+        </ul>
+        }
+      </li>
+    </ul>
+  </div>
+</div>

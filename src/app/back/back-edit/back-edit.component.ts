@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { HttpClientService } from '../../@http-clinet/http-clinet.service';
 import { SourceDataService } from '../../@services/source-data.service';
 import { FormsModule } from '@angular/forms';
@@ -17,12 +17,17 @@ export class BackEditComponent {
   title!: String;
   quizData: any = {};
   inputType!: boolean;
+  @ViewChild('questionPane', { static: false })
+  questionPane!: ElementRef<HTMLUListElement>;
+
 
   constructor(
     private sourceDataService: SourceDataService,
     private httpClientService: HttpClientService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef,
+    private ngZone: NgZone
   ) { }
 
   // ######## 取得列表頁點擊的問卷內容
@@ -118,7 +123,48 @@ export class BackEditComponent {
 
     // 新增完之後，讓「插入位置」永遠跳到最後一筆（長度 + 1）
     this.insertPos = this.quizData.questionList.length + 1;
+
+    this.cdRef.detectChanges();
+    this.scrollToBottom({ delay: 200, duration: 400 }); // 延遲與動畫時間可依喜好調整
   }
+
+    /** 平滑滾動到容器底部（可設定延遲與動畫時間） */
+    private scrollToBottom(opts?: { delay?: number; duration?: number }) {
+      const c = this.questionPane?.nativeElement;
+      if (!c) return;
+
+      const delay = opts?.delay ?? 0;
+      const duration = opts?.duration ?? 400;
+
+      const doScroll = () => {
+        const start = c.scrollTop;
+        const end = c.scrollHeight - c.clientHeight;
+        if (end <= start) return;
+
+        const startTime = performance.now();
+        const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+        const step = (now: number) => {
+          const elapsed = now - startTime;
+          const t = Math.min(1, elapsed / duration);
+          const y = start + (end - start) * easeOutCubic(t);
+          c.scrollTop = y;
+          if (t < 1) requestAnimationFrame(step);
+        };
+
+        requestAnimationFrame(step);
+      };
+
+      // 放到 Angular 變更檢測之外跑，避免重複觸發
+      this.ngZone.runOutsideAngular(() => {
+        if (delay > 0) {
+          setTimeout(doScroll, delay);
+        } else {
+          doScroll();
+        }
+      });
+    }
+
 
 
   ensureMinOptions(qi: number, newType: string) {

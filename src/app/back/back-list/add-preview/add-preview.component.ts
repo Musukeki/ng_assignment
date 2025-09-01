@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-preview',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './add-preview.component.html',
   styleUrl: './add-preview.component.scss'
 })
