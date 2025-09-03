@@ -1,83 +1,206 @@
-// 測試用列表--------
-app-menu {
-  position: fixed;
-  right: 0;
-  top: 0;
-  background: #578FCA;
-  cursor: pointer;
+.container {
+  width: 760px;
+  margin: 0 auto;
+  // height: 100%;
+  background: #e5e8f3;
+  border: 1px solid #34699A;
+  // border-left: 1px solid #34699A;
+  // border-right: 1px solid #34699A;
+}
 
-  width: 100px;
-  height: 75px;
+.quiz {
+  &_head {
+    position: relative;
+  }
 
-  clip-path: polygon(
-    0% 0%,       /* 頂點 */
-    100% 0%,     /* 右上 */
-    100% 100%,     /* 右下 */
-  );
+  &_title {
+    padding: 40px 20px;
+    background: #34699A;
 
-  transition: .3s;
+    h1 {
+      font-size: 24px;
+      color: #fff;
+    }
+  }
 
-  &:hover {
-    width: 200px;
-    height: 75px;
-    clip-path: polygon(
-      0% 0%,       /* 頂點 */
-      100% 0%,     /* 右上 */
-      100% 100%,     /* 右下 */
-    );
+  &_description {
+    font-size: 14px;
+    margin-top: 12px;
+    text-align: justify;
+    line-height: 1.5;
+    color: #fff;
+  }
+
+  &_date {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    font-size: 11px;
+    color: #dddddd;
+  }
+
+  &_user {
+    padding: 24px 20px;
+    background: #96b5d2b5;
+
+    ul {
+      display: flex;
+      gap: 20px;
+    }
+
+    li {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      input,
+      label {
+        width: 100% !important;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 350;
+    margin-right: 4px;
+  }
+
+  span.user_dec {
+    margin-right: 0;
+    background: #34699A;
+    padding: 2px;
+    color: #fff;
+    font-size: 12px;
+
+  }
+
+  input {
+    border: none;
+    border-radius: 0;
+    padding: 2px 4px;
+    margin-right: 8px;
+  }
+
+  &_footer {
+    // height: 28px;
+    padding: 12px 24px;
+    background: #34699A;
+    display: flex;
+    justify-content: flex-end;
+
+    &>button:first-child {
+      margin-right: 12px;
+    }
   }
 }
-// --------
 
-.container {
-  max-width: 768px;
-  margin: 30px auto 0;
+.ques {
+  &_id {
+    display: block;
+    background: #34699A;
+    text-align: center;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    line-height: 36px;
+    padding: 2px 6px !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+  }
 
-  padding-bottom: 24px;
-}
-.questionnaireDate {
-  display: flex;
-  justify-content: flex-end;
-}
-.questionnaireTitle {
-  font-size: 28px;
-  margin-bottom: 24px;
-}
-.questionnaireDescription {
-  margin-bottom: 24px;
-}
-.answerUsers {
-  margin-bottom: 24px;
+  &_title_group {
+    margin-bottom: 4px;
+  }
+
+  &_title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #00000097;
+  }
+
+  &_answer_group {
+    padding-left: 45px;
+    position: relative;
+
+    ul {
+      padding-bottom: 12px;
+
+      span {
+        font-size: 14px;
+        padding-top: 2px;
+      }
+    }
+  }
+
   li {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    white-space: nowrap;
-    div {
-      width: 45%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    input {
-      width: 80%;
-    }
-  }
-  li:first-child {
-    margin-bottom: 8px;
   }
 }
 
-.answerContent {
-  .answerContentTitle {
-    margin-bottom: 12px;
-  }
-  .answerContentItem {
-    margin-bottom: 24px;
-  }
+.ques_answer_group.invalid {
+  border-color: #bd4f4f;
 }
 
-.submitButtons {
-  display: flex;
-  justify-content: flex-end;
+.error {
+  color: #bd4f4f;
+  font-size: 12px;
+  margin-top: 6px;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
 }
+
+
+.checkGroup {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  border: 1px solid #000;
+  left: 0;
+  top: 0;
+
+  .checkBlock {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #dddddd;
+    opacity: .3;
+  }
+  .checkAlert {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #000;
+    background: #fff;
+    width: 300px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    & > div > button:first-child {
+      margin-right: 8px;
+    }
+  }
+}
+.checkGroup.active {
+  display: block;
+}
+
+
+
+// input,
+// textarea,
+// select {
+//   pointer-events: none;
+// }

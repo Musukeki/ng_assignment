@@ -1,145 +1,180 @@
 import { SourceDataService } from './../../@services/source-data.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsersService } from './../../@services/users.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MenuComponent } from "../../menu/menu.component";
+import { HttpClientService } from '../../@http-clinet/http-clinet.service';
+import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-answer',
-  imports: [FormsModule, RouterLink, MenuComponent],
+  imports: [FormsModule, RouterLink, MenuComponent, CommonModule],
   templateUrl: './answer.component.html',
   styleUrl: './answer.component.scss'
 })
 export class AnswerComponent {
 
+  isActive: boolean = false;
+
+  quizData: any = {};
+  user: any;
+  answers = {
+    text: {} as Record<number, string>,
+    single: {} as Record<number, string>,
+    multi: {} as Record<number, Set<string>>,
+  };
+
+  invalid: Record<number, string> = {};
+  postData!: {
+    quizId: any;
+    email: any;
+    questionAnswerVoList: any;
+  };
+
   constructor(
     private usersService: UsersService,
     private router: Router,
-    private sourceDataService: SourceDataService
-  ) {}
-
-
-  // 假資料
-  quesData = {
-    id: 1,
-    title: '超市偏好統計',
-    startDate: '2025/07/12',
-    endDate: '2025/07/18',
-    description: '台灣的四大超商指的是：7-11 (統一超商), 全家便利商店, 萊爾富, 和OK 超商。 這些超商在台灣的零售市場中佔據主要地位，提供各種商品和服務，包括日常用品、食品、代收代付、以及包裹取貨等。這些超商不僅是提供日常必需品的場所，也逐漸轉型成為生活服務中心，提供多元化的服務，如代收費用、包裹寄送、影印、提款等，成為台灣民眾生活中不可或缺的一部分。',
-    questArr: [
-      {
-        questId: 1,
-        isRequired: true,
-        questName: '您最常光顧的超市',
-        type: 'single',
-        questList: [
-          { name: '7-11', code: 'A' },
-          { name: '全家', code: 'B' },
-          { name: '萊爾富', code: 'C' },
-          { name: 'OK', code: 'D' }
-        ]
-      },
-      {
-        questId: 2,
-        isRequired: true,
-        questName: '這間超市最吸引您的地方',
-        type: 'multiple',
-        questList: [
-          { name: '環境', code: 'A' },
-          { name: '價格', code: 'B' },
-          { name: '食物', code: 'C' },
-          { name: '距離', code: 'D' }
-        ]
-      },
-      {
-        questId: 3,
-        isRequired: true,
-        questName: '平均一週光顧次數',
-        type: 'single',
-        questList: [
-          { name: '3 次以下', code: 'A' },
-          { name: '3 ~ 7 次', code: 'B' },
-          { name: '7 次以上', code: 'C' }
-        ]
-      },
-      {
-        questId: 4,
-        isRequired: true,
-        questName: '請簡述這家超市和其他的差異',
-        type: 'text',
-        textContent: ''
-      },
-      {
-        questId: 5,
-        isRequired: true,
-        questName: '想對這家超市說的話',
-        type: 'text',
-        textContent: ''
-      },
-    ]
+    private sourceDataService: SourceDataService,
+    private route: ActivatedRoute,
+    private httpClientService: HttpClientService,
+    private location: Location
+  ) {
+    const nav = this.router.getCurrentNavigation();
+    this.user = nav?.extras?.state?.['user'];
   }
 
-  // 使用者填寫的內容
-  newArr: Array<any> = [];
-  userName!: string;
-  userPhone!: string;
-  userEmail!: string;
-  userAge!: string;
-  title!: string;
-  startDate!: string;
-  endDate!: string;
-  description!: string;
+  ngOnInit() {
+    // const id = this.route.snapshot.queryParamMap.get('previewId');
+    this.getFillinData();
 
-
-
-
-  ngOnInit(): void {
-    this.title = this.quesData.title;
-    this.startDate = this.quesData.startDate;
-    this.endDate = this.quesData.endDate;
-    this.description = this.quesData.description;
-
-
-    for(let arr of this.quesData.questArr) {
-      this.newArr.push({...arr, singleChoice: '', textContent: '', multipleChoice: []})
-    }
-    console.log(this.newArr)
+    this.user = this.router.getCurrentNavigation()?.extras?.state?.['user']
+      ?? history.state?.user; // F5 或直接進入時用這個
+    const quizId = this.route.snapshot.paramMap.get('elementId');
+    console.log('USER', this.user, 'quizId', quizId);
   }
 
-  // 多選設定
-  onCheckboxChange(event: Event, questionIndex: number, code: string) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    const multipleChoiceArr = this.newArr[questionIndex].multipleChoice;
+  // ######## 取得列表頁點擊的問卷內容
+  getFillinData() {
+    const quizId = this.route.snapshot.paramMap.get('elementId');
+    const getUrl = `http://localhost:8080/quiz/get_quiz?quizId=${quizId}`;
+    this.httpClientService.getApi(getUrl).subscribe((res: any) => {
 
-    if (isChecked) {
-      // 如果勾選了，加入陣列（避免重複）
-      if (!multipleChoiceArr.includes(code)) {
-        multipleChoiceArr.push(code);
-      }
-    } else {
-      // 取消勾選，從陣列移除
-      const index = multipleChoiceArr.indexOf(code);
-      if (index > -1) {
-        multipleChoiceArr.splice(index, 1);
+      this.quizData.id = res.quiz.id;
+      this.quizData.name = res.quiz.name;
+      this.quizData.description = res.quiz.description;
+      this.quizData.startDate = res.quiz.startDate;
+      this.quizData.endDate = res.quiz.endDate;
+
+      this.quizData.questionList = res.questionList;
+
+      this.quizData.questionList.forEach((i: any) => {
+        i.options = JSON.parse(i.options);
+
+      })
+      console.log(this.quizData)
+    })
+  }
+
+  toggleMulti(qid: number, opt: string, checked: boolean) {
+    if (!this.answers.multi[qid]) this.answers.multi[qid] = new Set<string>();
+    checked ? this.answers.multi[qid].add(opt) : this.answers.multi[qid].delete(opt);
+  }
+
+  beforeSubmit() {
+    this.invalid = {};
+    let hasError = false;
+
+
+    for (const q of this.quizData.questionList) {
+      if (!q.required) continue;
+      const id = q.questionId;
+
+      if (q.type === 'TEXT') {
+        const v = this.answers.text[id]?.trim();
+        if (!v) { this.invalid[id] = '此題為必填'; hasError = true; }
+      } else if (q.type === 'SINGLE') {
+        if (!this.answers.single[id]) { this.invalid[id] = '請選擇一個選項'; hasError = true; }
+      } else if (q.type === 'MULTI') {
+        if (!this.answers.multi[id] || this.answers.multi[id].size === 0) {
+          this.invalid[id] = '至少勾選一個選項'; hasError = true;
+        }
       }
     }
+
+    if (hasError) {
+      // 捲到第一題錯誤
+      const first = Number(Object.keys(this.invalid)[0]);
+      document.querySelector(`[data-qid="${first}"]`)?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    const fillinData = this.quizData.questionList.map((q: any) => {
+      const id = q.questionId;
+
+      let answerList: string[] = [];
+
+      if (q.type === 'MULTI') {
+        answerList = Array.from(this.answers.multi[id] ?? []);
+      } else if (q.type === 'TEXT') {
+        const v = this.answers.text[id]?.toString().trim();
+        answerList = v ? [v] : [];
+      } else {
+        const v = this.answers.single[id];
+        const s = v != null ? v.toString().trim() : '';
+        answerList = s ? [s] : [];
+      }
+
+      // 轉字串、去空白、過濾空值
+      answerList = answerList.map(x => (x ?? '').toString().trim()).filter(x => x !== '');
+
+      return { questionId: id, answerList };
+    });
+
+
+    console.log('fillinData', fillinData);
+
+    const postData = {
+      quizId: this.quizData.id,
+      email: this.user.email,
+      questionAnswerVoList: fillinData
+    };
+    console.log("POST DATA", postData)
+
+    this.postData = postData;
+
+    this.isActive = !this.isActive;
+
+    // this.http.post(..., payload).subscribe(...)
+
+  }
+
+  submit() {
+    const postData = this.postData;
+    const postUrl = `http://localhost:8080/quiz/fillin`;
+    this.httpClientService.postApi(postUrl, postData).subscribe((res: any) => {
+
+      console.log(res);
+      if(res.code == 200) {
+        alert("填寫完畢，已送出!")
+        this.isActive = false;
+        this.location.back();
+      }
+    })
+
+  }
+
+  // TS：型別安全拿 checked（避免你先前那個錯誤）
+  onMultiChange(ev: Event, qid: number, opt: string) {
+    const input = ev.target as HTMLInputElement | null;
+    const checked = !!input?.checked;
+    this.toggleMulti(qid, opt, checked);
   }
 
 
-  checkTo(url: string) {
-    this.router.navigate([url]);
 
-    this.usersService.userName = this.userName;
-    this.usersService.userPhone = this.userPhone;
-    this.usersService.userEmail = this.userEmail;
-    this.usersService.userAge = this.userAge;
-
-    this.usersService.title = this.title;
-    this.usersService.startDate = this.startDate;
-    this.usersService.endDate = this.endDate;
-    this.usersService.description = this.description;
-
-    this.usersService.userChoiceData = this.newArr
+  backToList() {
+    this.location.back();
   }
 }

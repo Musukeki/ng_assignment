@@ -22,8 +22,9 @@ export class LoginComponent {
   rememberMe: boolean = false;
   showPassword: boolean = false;
 
+
   constructor(private router: Router, //
-    private httpClientService: HttpClientService) { }
+    private httpClientService: HttpClientService) {}
 
   ngOnInit(): void {
     const savedEmail = localStorage.getItem('rememberedAccount');
@@ -41,7 +42,8 @@ export class LoginComponent {
   }
 
   login() {
-    let apiUrl = `http://localhost:8080/user/login`;
+    // let apiUrl = `http://localhost:8080/user/login`;
+    let apiUrl = `http://localhost:8080/user/logins`;
 
     const postData = {
       email: this.account,
@@ -60,11 +62,12 @@ export class LoginComponent {
         } else {
           localStorage.removeItem('rememberedAccount');
         }
-        this.router.navigateByUrl("front/list");
+        this.router.navigate(["front/list"], {state: {user: res.user}});
 
       } else {
         alert("帳號或密碼錯誤")
       }
+
     })
 
   }

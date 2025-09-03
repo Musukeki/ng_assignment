@@ -1,75 +1,144 @@
-<app-menu></app-menu>
-
 <div class="container">
-
-  <p class="questionnaireDate">{{ startDate }} - {{ endDate }}</p>
-
-  <h2 class="questionnaireTitle">{{ title }}</h2>
-
-  <p class="questionnaireDescription">{{ description }}</p>
-
-  <ul class="answerUsers">
-    <li>
-      <div>
-        <p>姓名</p>
-        <input [(ngModel)]="userName">
+  <div class="quiz">
+    <div class="quiz_head">
+      <div class="quiz_title">
+        <h1>{{ quizData.name }}</h1>
+        <div class="quiz_description">{{quizData.description}}</div>
       </div>
-      <div>
-        <p>手機</p>
-        <input [(ngModel)]="userPhone">
+      <div class="quiz_date">
+        <span>開放期間：</span>
+        <span>{{quizData.startDate}}</span>～
+        <span>{{quizData.endDate}}</span>
       </div>
-    </li>
-    <li>
-      <div>
-        <p>Email</p>
-        <input [(ngModel)]="userEmail">
-      </div>
-      <div>
-        <p>年齡</p>
-        <input [(ngModel)]="userAge">
-      </div>
-    </li>
-  </ul>
+    </div>
 
-  <ul class="answerContent">
-    @for(data of quesData.questArr; track $index; let i = $index) {
-      <li class="answerContentItem">
-        <p class="answerContentTitle">{{ data.questName }}</p>
-        <ul>
-          <!-- 多選 -->
-          @if(data.type == 'multiple') {
-            @for(item of data.questList; track $index) {
-              <li>
-                <label for="{{ item.name }}">{{ item.name }}</label>
-                <input type="checkbox" name="{{ item.name }}" value="{{ item.name }}" [checked]="newArr[i].multipleChoice.includes(item.name)" (change)="onCheckboxChange($event, i, item.name)">
-              </li>
-            }
-          }
+    <div class="quiz_user">
+      <ul>
+        <li>
+          <span class="user_dec">填寫者姓名</span>
+          <label for="name">
+            <input type="text" name="name" value="{{user.name}}" readonly>
+          </label>
+        </li>
+        <li>
+          <span class="user_dec">聯絡電話</span>
+          <label for="phone">
+            <input type="text" name="phone" value="{{user.phone}}" readonly>
+          </label>
+        </li>
+        <li>
+          <span class="user_dec">電子信箱</span>
+          <label for="email">
+            <input type="text" name="email" value="{{user.email}}" readonly>
+          </label>
+        </li>
+        <li>
+          <span class="user_dec">年齡</span>
+          <label for="age">
+            <input type="text" name="age" value="{{user.age}}" readonly>
+          </label>
+        </li>
+      </ul>
+    </div>
 
-          <!-- 單選 -->
-          @if(data.type == 'single') {
-            @for(item of data.questList; track $index; let s = $index) {
-              <li>
-                <label for="{{ data.questId }}">{{ item.name }}</label>
-                <input type="radio" name="{{ data.questId }}" value="{{ item.name }}" [(ngModel)]="newArr[i].singleChoice">
-              </li>
-            }
-          }
+    <!-- <div class="ques">
+      @for (item of quizData.questionList; track $index) {
+      <ul>
+        <li class="ques_title_group">
+          <span class="ques_id">{{item.questionId}}</span>
+          <p class="ques_title">{{item.question}}
+            <span *ngIf="item.type === 'MULTI'">(複選)</span>
+            <span *ngIf="item.required=== true" style="color: rgb(189, 79, 79);">*</span>
+          </p>
+        </li>
 
-          <!-- 文字輸入 -->
-          @if(data.type == 'text') {
-            <li>
-              <textarea rows="6" cols="50" name="{{ data.questId }}" [(ngModel)]="newArr[i].textContent"></textarea>
+        <li class="ques_answer_group" style="border-bottom: 1px #34699A solid;">
+          <ul>
+            @for (item1 of item.options; track $index; let i = $index) {
+            <li *ngIf="item.type === 'SINGLE'" class="ques_option">
+              <label for="{{item.question}}">
+                <input type="radio" name="{{item.question}}" value=""><span>{{ item1 }}</span>
+              </label>
+            </li>
+            <li *ngIf="item.type === 'MULTI'" class="ques_option">
+              <input type="checkbox"><span>{{ item1 }}</span>
             </li>
           }
-        </ul>
-      </li>
-    }
-  </ul>
+          <li *ngIf="item.type === 'TEXT'" class="ques_option">
+            <textarea name="" id="" cols="30" rows="3" placeholder="請輸入內容"></textarea>
+          </li>
+          </ul>
+        </li>
+      </ul>
+      }
+    </div> -->
+    <div class="ques">
+      @for (item of quizData.questionList; track item.questionId) {
+      <ul [attr.data-qid]="item.questionId">
+        <!-- 題目區 -->
+        <li class="ques_title_group">
+          <span class="ques_id">{{item.questionId}}</span>
+          <p class="ques_title">
+            {{item.question}}
+            <span *ngIf="item.type === 'MULTI'">(複選)</span>
+            <span *ngIf="item.required" style="color:#bd4f4f">*</span>
+          </p>
+        </li>
 
-  <div class="submitButtons">
-    <button routerLink="/front/list">取消</button>
-    <button (click)="checkTo('/front/check')">下一步</button>
+        <!-- 作答區 -->
+        <li class="ques_answer_group" style="border-bottom: 1px #34699A solid;"
+          [class.invalid]="invalid[item.questionId]">
+          <ul>
+            @for (opt of item.options; track $index) {
+            <!-- SINGLE -->
+            <li *ngIf="item.type === 'SINGLE'" class="ques_option">
+              <label>
+                <input type="radio" [name]="'q'+item.questionId" [value]="opt"
+                  [(ngModel)]="answers.single[item.questionId]" [ngModelOptions]="{standalone:true}">
+                <span>{{ opt }}</span>
+              </label>
+            </li>
+
+            <!-- MULTI -->
+            <li *ngIf="item.type === 'MULTI'" class="ques_option">
+              <label>
+                <input type="checkbox" [checked]="answers.multi[item.questionId]?.has(opt)"
+                  (change)="onMultiChange($event, item.questionId, opt)">
+                <span>{{ opt }}</span>
+              </label>
+            </li>
+            }
+
+            <!-- TEXT -->
+            <li *ngIf="item.type === 'TEXT'" class="ques_option">
+              <textarea cols="30" rows="3" placeholder="請輸入內容" [(ngModel)]="answers.text[item.questionId]"
+                [ngModelOptions]="{standalone:true}"></textarea>
+            </li>
+          </ul>
+
+          <!-- 錯誤訊息 -->
+          <div class="error" *ngIf="invalid[item.questionId]">{{ invalid[item.questionId] }}</div>
+        </li>
+      </ul>
+      }
+    </div>
+
+    <footer class="quiz_footer">
+      <button (click)="backToList()">返回</button>
+      <button (click)="beforeSubmit()">送出</button>
+    </footer>
   </div>
+</div>
 
+<!-- 最後確認 ：Ｄ -->
+<div class="checkGroup" [ngClass]="{'active': isActive}">
+  <div class="checkBlock"></div>
+  <div class="checkAlert">
+    <p>確定要送出？</p>
+    <br>
+    <div>
+      <button (click)="submit()">送出</button>
+      <button (click)="isActive = false">取消</button>
+    </div>
+  </div>
 </div>

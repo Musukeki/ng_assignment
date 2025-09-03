@@ -12,7 +12,7 @@ import { BackEditComponent } from './back/back-edit/back-edit.component';
 
 export const routes: Routes = [
   { path: 'front/list', component: ListComponent },
-  { path: 'front/answer', component: AnswerComponent },
+  { path: 'front/answer/:elementId', component: AnswerComponent },
   { path: 'login', component: LoginComponent },
   { path: 'front/check', component: CheckComponent },
   { path: 'front/statistical', component: StatisticalComponent },
@@ -23,6 +23,8 @@ export const routes: Routes = [
     ]
   },
   { path: 'back/backEdit/:elementId', component: BackEditComponent },
+
+
   { path: 'menu', component: MenuComponent }, // 測試
 
   { path: 'back/backPreview', component: AddPreviewComponent },
