@@ -9,24 +9,29 @@ app-menu {
   width: 100px;
   height: 75px;
 
-  clip-path: polygon(
-    0% 0%,       /* 頂點 */
-    100% 0%,     /* 右上 */
-    100% 100%,     /* 右下 */
-  );
+  clip-path: polygon(0% 0%,
+      /* 頂點 */
+      100% 0%,
+      /* 右上 */
+      100% 100%,
+      /* 右下 */
+    );
 
   transition: .3s;
 
   &:hover {
     width: 200px;
     height: 75px;
-    clip-path: polygon(
-      0% 0%,       /* 頂點 */
-      100% 0%,     /* 右上 */
-      100% 100%,     /* 右下 */
-    );
+    clip-path: polygon(0% 0%,
+        /* 頂點 */
+        100% 0%,
+        /* 右上 */
+        100% 100%,
+        /* 右下 */
+      );
   }
 }
+
 // --------
 
 .nav {
@@ -41,11 +46,13 @@ app-menu {
     align-items: center;
     height: 100%;
   }
+
   .search {
     overflow: hidden;
     border-radius: 4px;
     display: flex;
     height: 32px;
+
     img {
       display: inline-block;
       width: 32px;
@@ -54,15 +61,18 @@ app-menu {
       padding: 6px;
       cursor: pointer;
       transition: .3s;
+
       &:hover {
         background: #ffaa3b;
       }
     }
+
     input {
       padding-left: 8px;
       height: 32px;
       width: 400px;
       border: 0;
+
       &:focus {
         outline: none;
       }
@@ -72,6 +82,7 @@ app-menu {
     display: inline-block;
     cursor: pointer;
     transition: .3s;
+
     &:hover {
       transform: perspective(100px) translateZ(15px);
     }
@@ -84,40 +95,48 @@ app-menu {
   margin: 0 auto;
   // padding-top: 40px;
 }
+
 .topbar_bg {
   background: #232f3e;
 }
+
 .topbar {
   font-family: "Noto Sans TC", "Work Sans", "LXGW WenKai Mono TC", sans-serif;
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
   margin-bottom: 32px;
+
   // background: #febd69;
   li {
     display: flex;
     align-items: center;
+
     div {
       display: flex;
       align-items: center;
       width: 42%;
     }
+
     p {
       margin-right: 10px;
       white-space: nowrap;
       font-size: 15px;
       color: #fff;
     }
+
     input {
       width: 100%;
       font-size: 14px;
       padding: 6px 8px;
       border-radius: 4px;
       border: 0;
+
       &:focus {
         outline: 2px solid #ffaa3c;
       }
     }
+
     button {
       border: none;
       white-space: nowrap;
@@ -125,6 +144,7 @@ app-menu {
       font-size: 14px;
       transition: .1s;
       outline: 2px solid #ffaa3c;
+
       &:hover {
         background: #ffaa3c;
         outline: 2px solid #fff;
@@ -132,6 +152,7 @@ app-menu {
       }
     }
   }
+
   li:last-child {
     margin-bottom: 0;
   }
@@ -142,11 +163,15 @@ app-menu {
 }
 
 table {
-  th, tr, td {
+
+  th,
+  tr,
+  td {
     vertical-align: middle;
     text-align: center;
   }
 }
+
 table[mat-table] {
   table-layout: fixed;
   width: 100%;
@@ -175,34 +200,40 @@ td.mat-mdc-cell.cdk-column-名稱 span {
 
 .mat-mdc-row {
   transition: .3s;
+
   &:hover {
     background: #ffaa3c16;
   }
 }
+
 .mat-mdc-paginator {
   background-color: #34699A;
   color: #fff;
   // opacity: .8;
 
 }
-.mat-mdc-header-cell, .mat-mdc-cell {
+
+.mat-mdc-header-cell,
+.mat-mdc-cell {
   border-bottom: 1px solid #232f3e69;
 }
 
 ::ng-deep .mat-mdc-paginator {
-  color: #fff;             // 控制整體字體顏色
+  color: #fff; // 控制整體字體顏色
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-select-value {
-  color: #fff;          // 下拉選單內數字顏色
+  color: #fff; // 下拉選單內數字顏色
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
-  color: #fff;          // 「第 1–10 筆，共 xx 筆」文字顏色
+  color: #fff; // 「第 1–10 筆，共 xx 筆」文字顏色
 }
+
 ::ng-deep .mat-mdc-paginator .mat-mdc-icon-button svg {
-  fill: #fff;  // 改箭頭的填滿顏色
+  fill: #fff; // 改箭頭的填滿顏色
 }
+
 ::ng-deep .mat-mdc-paginator .mat-mdc-icon-button {
   --mdc-icon-button-icon-color: #fff;
   --mdc-icon-button-disabled-icon-color: #9e9e9e;

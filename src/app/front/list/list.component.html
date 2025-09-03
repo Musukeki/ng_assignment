@@ -11,8 +11,14 @@
       </div>
     </li>
     <li class="nav_icon">
-      <img style="width: 28px; height: 28px; margin-left: 16px;" src="user.png" alt="登入資訊">
-      <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出" (click)="checkToLogout('/login')">
+      <div class="bubble" [class.open]="isBubbleOpen">
+        <p style="color: #34699A;">{{ user.name }}</p>
+        <p style="color: #34699A;">{{ user.email }}</p>
+      </div>
+      <img style="width: 28px; height: 28px; margin-left: 16px;" src="user.png" alt="登入資訊"
+        (click)="toggleBubble($event)">
+      <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出"
+        (click)="checkToLogout('/login')">
     </li>
   </ul>
 </nav>
@@ -55,7 +61,8 @@
         <th mat-header-cell *matHeaderCellDef style="width:20%"> 名稱 </th>
         <td mat-cell *matCellDef="let element" style="width:20%">
           <!-- <a *ngIf="status(element) === '進行中'" [routerLink]="['/front/answer', element.id]" style="color: #34699A;"> -->
-          <a *ngIf="status(element) === '進行中'" [routerLink]="['/front/answer', element.id]" [state]="{user: user}" style="color: #34699A;">
+          <a *ngIf="status(element) === '進行中'" [routerLink]="['/front/answer', element.id]" [state]="{user: user}"
+            style="color: #34699A;">
             {{ element.name }}
           </a>
           <span *ngIf="status(element) !== '進行中'">{{ element.name }}</span>
@@ -91,7 +98,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.data-result]="row.id"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons
+      aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
 </div>
