@@ -208,6 +208,17 @@ export class DialogComponent {
 
     const apiUrl = `http://localhost:8080/quiz/create`;
 
+    // ★ 全面檢查：已有題目中是否有「重複選項」
+    const dupIdx = this.findFirstQuestionWithDup();
+    if (dupIdx !== -1) {
+      const q = this.addQuestData.questOptions[dupIdx];
+      const title = (q?.optionContent || `第 ${dupIdx + 1} 題`).toString();
+      alert(`「${title}」的選項內容不能重複`);
+      this.selectedIndex = 1; // 切回題目設定分頁
+      return;
+    }
+
+
     // 把前端題目轉成後端 QuestionVo 需要的格式
     const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
       // const typeUpper = (q.type || '').toUpperCase(); // 'SINGLE' | 'MULTIPLE' | 'TEXT'
@@ -373,16 +384,41 @@ export class DialogComponent {
     return (v ?? '').toString().trim().length > 0;
   }
 
+  // private validateBeforeAdd(): boolean {
+  //   const c = this.addQuestData.addContent;
+
+  //   // 題目文字不可為空（單選、多選、文字題都要有題目）
+  //   if (!this.isNonEmpty(c.optionContent)) {
+  //     alert('題目內容不能為空');
+  //     return false;
+  //   }
+
+  //   // 單選 / 多選：至少 2 個選項，且每個選項都要有內容
+  //   if (c.type === 'single' || c.type === 'multiple') {
+  //     const opts = c.options || [];
+  //     if (opts.length < 2) {
+  //       alert('選項不可少於兩個');
+  //       return false;
+  //     }
+  //     const hasEmpty = opts.some(o => !this.isNonEmpty(o.value));
+  //     if (hasEmpty) {
+  //       alert('選項內容不能為空');
+  //       return false;
+  //     }
+  //   }
+
+  //   // 文字題不需選項，通過
+  //   return true;
+  // }
+
   private validateBeforeAdd(): boolean {
     const c = this.addQuestData.addContent;
 
-    // 題目文字不可為空（單選、多選、文字題都要有題目）
     if (!this.isNonEmpty(c.optionContent)) {
       alert('題目內容不能為空');
       return false;
     }
 
-    // 單選 / 多選：至少 2 個選項，且每個選項都要有內容
     if (c.type === 'single' || c.type === 'multiple') {
       const opts = c.options || [];
       if (opts.length < 2) {
@@ -394,11 +430,16 @@ export class DialogComponent {
         alert('選項內容不能為空');
         return false;
       }
+      // ★ 新增：重複檢查（忽略大小寫與前後空白）
+      if (this.hasDupInAddContent()) {
+        alert('選項內容不能重複');
+        return false;
+      }
     }
 
-    // 文字題不需選項，通過
     return true;
   }
+
 
   // openPreviewInNewTab() {
   //   // 產 route
@@ -497,6 +538,17 @@ export class DialogComponent {
       return;
     }
 
+    // ★ 全面檢查：已有題目中是否有「重複選項」
+    const dupIdx = this.findFirstQuestionWithDup();
+    if (dupIdx !== -1) {
+      const q = this.addQuestData.questOptions[dupIdx];
+      const title = (q?.optionContent || `第 ${dupIdx + 1} 題`).toString();
+      alert(`「${title}」的選項內容不能重複`);
+      this.selectedIndex = 1; // 切回題目設定分頁
+      return;
+    }
+
+
     // 組預覽/將送出資料
     const questionList = qs.map((q, idx) => {
       // const typeUpper = (q.type || '').toUpperCase();
@@ -582,6 +634,17 @@ export class DialogComponent {
       return;
     }
 
+    // ★ 全面檢查：已有題目中是否有「重複選項」
+    const dupIdx = this.findFirstQuestionWithDup();
+    if (dupIdx !== -1) {
+      const q = this.addQuestData.questOptions[dupIdx];
+      const title = (q?.optionContent || `第 ${dupIdx + 1} 題`).toString();
+      alert(`「${title}」的選項內容不能重複`);
+      this.selectedIndex = 1; // 切回題目設定分頁
+      return;
+    }
+
+
     // 組 questionList
     const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
       // const typeUpper = (q.type || '').toUpperCase();
@@ -631,6 +694,40 @@ export class DialogComponent {
 
 
 
+  // === 重複檢查工具 ===
+  private norm(s: any): string {
+    return (s ?? '').toString().trim().toLowerCase();
+  }
+
+  private hasDupStrings(values: string[]): boolean {
+    const seen = new Set<string>();
+    for (const v of values.map(v => this.norm(v))) {
+      if (!v) continue;        // 空字串另有驗證，這裡略過
+      if (seen.has(v)) return true;
+      seen.add(v);
+    }
+    return false;
+  }
+
+  /** 檢查「新增輸入區」addContent 的選項是否重複（僅單/多選） */
+  private hasDupInAddContent(): boolean {
+    const c = this.addQuestData.addContent;
+    if (c.type === 'text') return false;
+    const values = (c.options || []).map(o => o?.value ?? '');
+    return this.hasDupStrings(values);
+  }
+
+  /** 檢查所有已加入題目是否有重複選項；有就回傳第一個違規題目的 index，否則 -1 */
+  private findFirstQuestionWithDup(): number {
+    const qs = this.addQuestData.questOptions || [];
+    for (let i = 0; i < qs.length; i++) {
+      const q = qs[i];
+      if ((q.type || '').toLowerCase() === 'text') continue;
+      const values = (q.options || []).map(o => o?.value ?? '');
+      if (this.hasDupStrings(values)) return i;
+    }
+    return -1;
+  }
 
 
 

@@ -11,8 +11,13 @@
       </div>
     </li>
     <li class="nav_icon">
+      <div class="bubble" [class.open]="isBubbleOpen">
+        <p style="color: #008b33d2;">{{ user.name }}</p>
+        <p style="color: #34699A;">{{ user.email }}</p>
+      </div>
       <img style="width: 28px; height: 28px;" src="add_quiz.png" alt="新增問卷" matButton (click)="openDialog()">
-      <img style="width: 28px; height: 28px; margin-left: 16px;" src="user.png" alt="登入資訊">
+      <img style="width: 28px; height: 28px; margin-left: 16px;" src="user.png" alt="登入資訊"
+      (click)="toggleBubble($event)">
       <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出" (click)="checkToLogout('/login')">
     </li>
   </ul>
@@ -64,7 +69,7 @@
       <ng-container matColumnDef="名稱">
         <th mat-header-cell *matHeaderCellDef style="width:20%"> 名稱 </th>
         <td mat-cell *matCellDef="let element" style="width:20%">
-          <a *ngIf="status(element) === '進行中'" routerLink="" style="color: #34699A;">
+          <a *ngIf="status(element) === '進行中'" style="">
             {{ element.name }}
           </a>
           <span *ngIf="status(element) !== '進行中'">{{ element.name }}</span>
@@ -89,7 +94,10 @@
       <ng-container matColumnDef="結果">
         <th mat-header-cell *matHeaderCellDef style="width:10%"> 結果 </th>
         <td mat-cell *matCellDef="let element" style="width:10%">
-          <a *ngIf="status(element) === '已結束'" routerLink="" style="color: rgb(143, 112, 202);">
+          <a *ngIf="status(element) === '已結束'"
+          [routerLink]="['/statistical', element.id]"
+          [queryParams]="{ name: element.name }"
+          [state]="{ data: element }" style="color: rgb(143, 112, 202);">
             <img src="search.png" alt="img_search" style="display: inline-block; width: 16px; height: 16px;">
           </a>
           <span *ngIf="status(element) !== '已結束'">-</span>

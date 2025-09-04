@@ -165,10 +165,13 @@ export class ListComponent implements AfterViewInit {
       console.log(res)
       const raw: PeriodicElement[] = res.questionList || [];
 
-      this.sourceDataService.sourceData = raw;
+      const filtered = raw.filter(item => this.status(item) !== '尚未發布');
 
-      this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
-      this.newData = new MatTableDataSource(this.sourceDataService.sourceData);
+      this.sourceDataService.sourceData = raw;
+      this.sourceDataService.sourceData = filtered;
+
+      this.dataSource = new MatTableDataSource(filtered);
+      this.newData = new MatTableDataSource(filtered);
       this.newData.paginator = this.paginator; // 重建資料來源後要重新指定 paginator
 
       console.log(this.newData.data);
@@ -182,16 +185,16 @@ export class ListComponent implements AfterViewInit {
 
   isBubbleOpen = false;
 
-toggleBubble(e: MouseEvent) {
-  e.stopPropagation();               // 避免冒泡到 document
-  this.isBubbleOpen = !this.isBubbleOpen;
-}
+  toggleBubble(e: MouseEvent) {
+    e.stopPropagation();               // 避免冒泡到 document
+    this.isBubbleOpen = !this.isBubbleOpen;
+  }
 
-// 可選：點頁面其它地方自動關閉
-@HostListener('document:click')
-closeBubble() {
-  if (this.isBubbleOpen) this.isBubbleOpen = false;
-}
+  // 可選：點頁面其它地方自動關閉
+  @HostListener('document:click')
+  closeBubble() {
+    if (this.isBubbleOpen) this.isBubbleOpen = false;
+  }
 
 
 

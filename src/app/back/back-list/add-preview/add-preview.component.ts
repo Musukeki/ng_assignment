@@ -38,7 +38,6 @@ export class AddPreviewComponent {
       this.published = !!data.published;
       this.questionList = Array.isArray(data.questionList) ? data.questionList : [];
 
-      // ✅ 保險驗證（避免使用者直接輸入網址繞過前端檢查）
       const errors = this.validatePreviewPayload(data);
       if (errors.length) {
         alert(errors.join('\n'));

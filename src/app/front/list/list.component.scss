@@ -1,3 +1,4 @@
+
 // 測試用列表--------
 app-menu {
   position: fixed;
@@ -80,6 +81,7 @@ app-menu {
     }
   }
 
+
   &_icon {
     position: relative;
   }
@@ -91,7 +93,7 @@ app-menu {
     left: -44.5px;
     bottom: -80px;
     background: #fff;
-    border: 1px solid #000;
+    border: 2px solid #34699A;
     border-radius: 8px;
     padding: 8px 10px;
     font-size: 14px;
@@ -117,7 +119,7 @@ app-menu {
     height: 0;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-bottom: 14px solid #000;
+    border-bottom: 14px solid #34699A;
     z-index: 98;
   }
 

@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ViewChild, inject } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
@@ -31,13 +31,18 @@ export class BackListComponent implements AfterViewInit {
   filterEndDate!: string;
   inputContent!: string;
 
+  user: any;
+
   readonly dialog = inject(MatDialog);
 
   constructor(
     private sourceDataService: SourceDataService,
     private httpClientService: HttpClientService,
     private router: Router
-  ) { }
+  ) {
+    const nav = this.router.getCurrentNavigation();
+    this.user = nav?.extras?.state?.['user'] ?? history.state?.user;
+  }
 
   // === 狀態計算（優先判斷草稿，再判斷時間）===
   today = (() => {
@@ -151,7 +156,7 @@ export class BackListComponent implements AfterViewInit {
             this.sourceDataService.sourceData.filter(row => !toDelete.has(row.id));
 
           this.dataSource = new MatTableDataSource(this.sourceDataService.sourceData);
-          this.newData    = new MatTableDataSource(this.sourceDataService.sourceData);
+          this.newData = new MatTableDataSource(this.sourceDataService.sourceData);
           this.newData.paginator = this.paginator;
 
           this.selectedIds = [];
@@ -240,6 +245,18 @@ export class BackListComponent implements AfterViewInit {
 
   checkToLogout(url: string) {
     this.router.navigate([url]);
+  }
+
+  isBubbleOpen = false;
+
+  toggleBubble(e: MouseEvent) {
+    e.stopPropagation();               // 避免冒泡到 document
+    this.isBubbleOpen = !this.isBubbleOpen;
+  }
+  // 可選：點頁面其它地方自動關閉
+  @HostListener('document:click')
+  closeBubble() {
+    if (this.isBubbleOpen) this.isBubbleOpen = false;
   }
 }
 

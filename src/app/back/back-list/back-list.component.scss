@@ -78,6 +78,61 @@ app-menu {
       }
     }
   }
+  &_icon {
+    position: relative;
+  }
+
+  &_icon .bubble {
+    position: absolute;
+    width: 150px;
+    height: 70px;
+    left: -16.5px;
+    bottom: -80px;
+    background: #fff;
+    border: 2px solid #34699A;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 14px;
+    text-align: center;
+    overflow: visible;
+    display: none;
+  }
+
+  &_icon .bubble.open {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &_icon .bubble::before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-12px);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 14px solid #34699A;
+    z-index: 98;
+  }
+
+  &_icon .bubble::after {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-10px);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid #fff;
+    /* 與泡泡同色 */
+    z-index: 99;
+  }
   .nav_icon img {
     display: inline-block;
     cursor: pointer;

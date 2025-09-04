@@ -1,0 +1,26 @@
+
+<div class="statistical_wrapper">
+  <div class="container">
+    <div class="quiz_title">
+      <!-- <p>{{quizId}}</p> -->
+      <h1>{{quizName}}</h1>
+      <p>{{ elementFromState?.startDate }} ~ {{ elementFromState?.endDate }}</p>
+    </div>
+    <div class="ques_wrapper">
+      <div class="ques_statis">
+        @for (q of quizData; track $index; let i = $index) {
+          <div class="ques_body">
+            <div class="ques_title">{{ q.questionId }}. {{ q.question }}</div>
+            <div #chartRef class="chart" style="width:800px; height:300px;"></div>
+          </div>
+        }
+      </div>
+      <footer>
+        <div>
+          <button (click)="backBtn()">返回</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
