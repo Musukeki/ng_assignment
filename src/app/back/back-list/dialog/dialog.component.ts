@@ -495,11 +495,18 @@ export class DialogComponent {
       return;
     }
 
-    const tree = this.router.createUrlTree(['https://musukeki.github.io/back/backPreview'], { queryParams: { previewId } });
-    const url = this.router.serializeUrl(tree);
-    const abs = url.startsWith('http') ? url : `${location.origin}${url}`;
+    // const tree = this.router.createUrlTree(['https://musukeki.github.io/back/backPreview'], { queryParams: { previewId } });
+    // const url = this.router.serializeUrl(tree);
+    // const abs = url.startsWith('http') ? url : `${location.origin}${url}`;
 
-    const win = window.open(abs, '_blank');
+    // const win = window.open(abs, '_blank');
+    // if (!win) {
+    //   alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
+    // }
+
+    const externalUrl = 'https://musukeki.github.io/back/backPreview?previewId=' + previewId;
+
+    const win = window.open(externalUrl, '_blank');
     if (!win) {
       alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
     }
