@@ -504,12 +504,22 @@ export class DialogComponent {
     //   alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
     // }
 
-    const externalUrl = 'https://musukeki.github.io/back/backPreview?previewId=' + previewId;
-
-    const win = window.open(externalUrl, '_blank');
+    const tree = this.router.createUrlTree(['/back/backPreview'], {
+      queryParams: { previewId },
+    });
+    
+    // 生成相對 URL
+    const relativeUrl = this.router.serializeUrl(tree);
+    
+    // 加上 origin 變成絕對 URL
+    const absUrl = `${location.origin}${relativeUrl}`;
+    
+    // 開新分頁
+    const win = window.open(absUrl, '_blank');
     if (!win) {
       alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
     }
+
   }
 
 
