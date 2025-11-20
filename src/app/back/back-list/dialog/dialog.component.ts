@@ -384,33 +384,6 @@ export class DialogComponent {
     return (v ?? '').toString().trim().length > 0;
   }
 
-  // private validateBeforeAdd(): boolean {
-  //   const c = this.addQuestData.addContent;
-
-  //   // 題目文字不可為空（單選、多選、文字題都要有題目）
-  //   if (!this.isNonEmpty(c.optionContent)) {
-  //     alert('題目內容不能為空');
-  //     return false;
-  //   }
-
-  //   // 單選 / 多選：至少 2 個選項，且每個選項都要有內容
-  //   if (c.type === 'single' || c.type === 'multiple') {
-  //     const opts = c.options || [];
-  //     if (opts.length < 2) {
-  //       alert('選項不可少於兩個');
-  //       return false;
-  //     }
-  //     const hasEmpty = opts.some(o => !this.isNonEmpty(o.value));
-  //     if (hasEmpty) {
-  //       alert('選項內容不能為空');
-  //       return false;
-  //     }
-  //   }
-
-  //   // 文字題不需選項，通過
-  //   return true;
-  // }
-
   private validateBeforeAdd(): boolean {
     const c = this.addQuestData.addContent;
 
@@ -439,77 +412,6 @@ export class DialogComponent {
 
     return true;
   }
-
-
-  // openPreviewInNewTab() {
-  //   // 產 route
-  //   const tree = this.router.createUrlTree(['/back/backPreview']);
-  //   const url  = this.router.serializeUrl(tree);
-  //   // 轉成絕對網址（避免 baseHref/相對路徑問題）
-  //   const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
-
-  //   // 比較不會被瀏覽器當成 popup 的流程
-  //   const win = window.open('', '_blank'); // 先開空白分頁（點擊同步觸發）
-  //   if (!win) {
-  //     alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗。');
-  //     // 後援方案：同分頁導到預覽
-  //     this.router.navigateByUrl('/back/backPreview');
-  //     return;
-  //   }
-  //   win.opener = null;        // 安全
-  //   win.location.href = abs;  // 導到真正的預覽頁
-  // }
-
-  // openPreviewInNewTab() {
-  //   // 1) 準備預覽資料（略：你的整段 questionList 組裝維持原寫法）
-  //   const questionList = (this.addQuestData.questOptions || []).map((q, idx) => {
-  //     const typeUpper = (q.type || '').toUpperCase();
-  //     const optionTexts =
-  //       typeUpper === 'TEXT'
-  //         ? []
-  //         : ((q.options || [])
-  //             .map(o => (o?.value ?? '').toString().trim())
-  //             .filter(s => s.length > 0));
-  //     return {
-  //       questionId: idx + 1,
-  //       question: q.optionContent ?? '',
-  //       type: typeUpper,
-  //       required: !!q.isReqired,
-  //       options: optionTexts
-  //     };
-  //   });
-
-  //   const previewData = {
-  //     name: this.addQuestData.questTitle ?? '',
-  //     description: this.addQuestData.questDesc ?? '',
-  //     startDate: this.addQuestData.startDate ?? '',
-  //     endDate: this.addQuestData.endDate ?? '',
-  //     published: true,
-  //     questionList
-  //   };
-
-  //   // 2) 存 localStorage（先存再開窗都可以，這裡沿用先存）
-  //   const previewId = `quiz_preview_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-  //   localStorage.setItem(previewId, JSON.stringify(previewData));
-
-  //   // 3) 產 URL（帶上 query）
-  //   const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
-  //   const url  = this.router.serializeUrl(tree);
-  //   const abs  = url.startsWith('http') ? url : `${location.origin}${url}`;
-
-  //   // 4) 先開一個空白分頁，再指定網址（被視為使用者主動行為，比較不會被擋）
-  //   const win = window.open('about:blank', '_blank');
-  //   if (win) {
-  //     win.opener = null;        // 安全
-  //     win.location.href = abs;  // 導到預覽頁
-  //     return;                   // ✅ 成功開新分頁，不要再導本頁
-  //   }
-
-  //   // 5) 後援：彈出被擋才用「同分頁導頁」+ 關掉 Dialog，避免你說的「跳到預覽但 Dialog 還在」
-  //   alert('瀏覽器阻擋了彈出視窗，將在此分頁開啟預覽');
-  //   this.dialogRef.close(false);         // 把 Dialog 關掉
-  //   this.router.navigateByUrl(url);      // 同分頁導頁
-  // }
 
   openPreviewInNewTab() {
     const qs = this.addQuestData.questOptions || [];
@@ -593,14 +495,31 @@ export class DialogComponent {
       return;
     }
 
-    const tree = this.router.createUrlTree(['/back/backPreview'], { queryParams: { previewId } });
-    const url = this.router.serializeUrl(tree);
-    const abs = url.startsWith('http') ? url : `${location.origin}${url}`;
+    // const tree = this.router.createUrlTree(['https://musukeki.github.io/back/backPreview'], { queryParams: { previewId } });
+    // const url = this.router.serializeUrl(tree);
+    // const abs = url.startsWith('http') ? url : `${location.origin}${url}`;
 
-    const win = window.open(abs, '_blank');
+    // const win = window.open(abs, '_blank');
+    // if (!win) {
+    //   alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
+    // }
+
+    const tree = this.router.createUrlTree(['/back/backPreview'], {
+      queryParams: { previewId },
+    });
+    
+    // 生成相對 URL
+    const relativeUrl = this.router.serializeUrl(tree);
+    
+    // 加上 origin 變成絕對 URL
+    const absUrl = `${location.origin}${relativeUrl}`;
+    
+    // 開新分頁
+    const win = window.open(absUrl, '_blank');
     if (!win) {
       alert('瀏覽器阻擋了彈出視窗，請允許本網站的彈出視窗後再試一次。');
     }
+
   }
 
 
