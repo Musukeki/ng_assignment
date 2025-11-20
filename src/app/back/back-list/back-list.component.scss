@@ -3,32 +3,30 @@ app-menu {
   position: fixed;
   right: 0;
   top: 0;
-  background: #578FCA;
+  background: #578fca;
   cursor: pointer;
 
   width: 100px;
   height: 75px;
 
-  clip-path: polygon(0% 0%,
-      /* 頂點 */
-      100% 0%,
-      /* 右上 */
-      100% 100%,
-      /* 右下 */
-    );
+  clip-path: polygon(
+    0% 0%,
+    /* 頂點 */ 100% 0%,
+    /* 右上 */ 100% 100%,
+    /* 右下 */
+  );
 
-  transition: .3s;
+  transition: 0.3s;
 
   &:hover {
     width: 200px;
     height: 75px;
-    clip-path: polygon(0% 0%,
-        /* 頂點 */
-        100% 0%,
-        /* 右上 */
-        100% 100%,
-        /* 右下 */
-      );
+    clip-path: polygon(
+      0% 0%,
+      /* 頂點 */ 100% 0%,
+      /* 右上 */ 100% 100%,
+      /* 右下 */
+    );
   }
 }
 
@@ -37,7 +35,6 @@ app-menu {
 .nav {
   height: 64px;
   background: #131921;
-
 
   &_list {
     justify-content: space-between;
@@ -60,7 +57,7 @@ app-menu {
       background: #febd69;
       padding: 6px;
       cursor: pointer;
-      transition: .3s;
+      transition: 0.3s;
 
       &:hover {
         background: #ffaa3b;
@@ -89,7 +86,7 @@ app-menu {
     left: -16.5px;
     bottom: -80px;
     background: #fff;
-    border: 2px solid #34699A;
+    border: 2px solid #34699a;
     border-radius: 8px;
     padding: 8px 10px;
     font-size: 14px;
@@ -106,7 +103,7 @@ app-menu {
   }
 
   &_icon .bubble::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -14px;
     left: 50%;
@@ -115,12 +112,12 @@ app-menu {
     height: 0;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-bottom: 14px solid #34699A;
+    border-bottom: 14px solid #34699a;
     z-index: 98;
   }
 
   &_icon .bubble::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -12px;
     left: 50%;
@@ -136,7 +133,7 @@ app-menu {
   .nav_icon img {
     display: inline-block;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
 
     &:hover {
       transform: perspective(100px) translateZ(15px);
@@ -162,7 +159,6 @@ app-menu {
   padding: 12px 0;
   margin-bottom: 32px;
 
-  // background: #febd69;
   li {
     display: flex;
     align-items: center;
@@ -191,13 +187,15 @@ app-menu {
         outline: 2px solid #ffaa3c;
       }
     }
-
+    .btn_group {
+      margin-right: calc(100% - 90px);
+    }
     button {
       border: none;
       white-space: nowrap;
       padding: 6px 12px;
       font-size: 14px;
-      transition: .1s;
+      transition: 0.1s;
       outline: 2px solid #ffaa3c;
 
       &:hover {
@@ -218,7 +216,6 @@ app-menu {
 }
 
 table {
-
   th,
   tr,
   td {
@@ -252,9 +249,8 @@ td.mat-mdc-cell.cdk-column-名稱 span {
   vertical-align: middle;
 }
 
-
 .mat-mdc-row {
-  transition: .3s;
+  transition: 0.3s;
 
   &:hover {
     background: #ffaa3c16;
@@ -262,10 +258,9 @@ td.mat-mdc-cell.cdk-column-名稱 span {
 }
 
 .mat-mdc-paginator {
-  background-color: #34699A;
+  background-color: #34699a;
   color: #fff;
   // opacity: .8;
-
 }
 
 .mat-mdc-header-cell,
@@ -294,16 +289,10 @@ td.mat-mdc-cell.cdk-column-名稱 span {
   --mdc-icon-button-disabled-icon-color: #9e9e9e;
 }
 
-/* 表頭整列背景 + 文字顏色 */
-// .mat-mdc-table .mat-mdc-header-row {
-//   background: #7ea6ce;   /* 你現在配色的深藍 */
-//   color: #fff;
-// }
-
 footer {
   width: 100%;
   height: 40px;
-  background: #232F3E;
+  background: #232f3e;
   position: fixed;
   bottom: 0;
 }

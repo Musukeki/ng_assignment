@@ -4,36 +4,65 @@
   <ul class="nav_list">
     <li class="">
       <div class="search">
-        <input placeholder="請輸入問卷名稱" [(ngModel)]="inputContent" (ngModelChange)="searchByFilters()">
+        <input
+          placeholder="請輸入問卷名稱"
+          [(ngModel)]="inputContent"
+          (ngModelChange)="searchByFilters()"
+        />
         <div>
-          <img src="search_black.png" alt="search_img">
+          <img src="search_black.png" alt="search_img" />
         </div>
       </div>
     </li>
     <li class="nav_icon">
-      <img style="width: 28px; height: 28px;" src="add_quiz.png" alt="新增問卷" matButton (click)="openDialog()">
-      <img style="width: 28px; height: 28px; margin-left: 16px;" src="user.png" alt="登入資訊">
-      <img style="width: 28px; height: 28px; margin-left: 16px;" src="logout.png" alt="登出" (click)="checkToLogout('/login')">
+      <img
+        style="width: 28px; height: 28px"
+        src="add_quiz.png"
+        alt="新增問卷"
+        matButton
+        (click)="openDialog()"
+      />
+      <img
+        style="width: 28px; height: 28px; margin-left: 16px"
+        src="user.png"
+        alt="登入資訊"
+      />
+      <img
+        style="width: 28px; height: 28px; margin-left: 16px"
+        src="logout.png"
+        alt="登出"
+        (click)="checkToLogout('/login')"
+      />
     </li>
   </ul>
 </nav>
-<div class=" topbar_bg">
+<div class="topbar_bg">
   <div class="container">
     <ul class="topbar">
       <li class="topbar_date">
-        <div style="width: 308px;">
+        <div style="width: 308px">
           <p>開始日期</p>
-          <input type="date" [(ngModel)]="filterStartDate" style="margin-right: 24px;">
+          <input
+            type="date"
+            [(ngModel)]="filterStartDate"
+            style="margin-right: 24px"
+          />
         </div>
         <div>
           <p>結束日期</p>
-          <input type="date" [(ngModel)]="filterEndDate" style="width: 300px;">
+          <input type="date" [(ngModel)]="filterEndDate" style="width: 300px" />
         </div>
       </li>
       <li class="topbar_btn">
         <div>
           <button (click)="searchByFilters()">搜尋</button>
-          <button class="inputBtn" (click)="clearFilters()" style="margin-left: 12px;">清除</button>
+          <button
+            class="inputBtn"
+            (click)="clearFilters()"
+            style="margin-left: 12px"
+          >
+            清除
+          </button>
         </div>
       </li>
     </ul>
@@ -41,29 +70,50 @@
 </div>
 <div class="container list">
   <!-- 上方搜尋欄 -->
-
-  <button class="baseBtn" style="margin-right: 4px; color: #fff;" matButton (click)="openDialog()">新增</button>
-  <button class="baseBtn" style="color: #fff;" (click)="onDeleteClick()">刪除</button>
+  <div class="btn_group">
+    <button
+      class="baseBtn"
+      style="margin-right: 4px; color: #fff"
+      matButton
+      (click)="openDialog()"
+    >
+      新增
+    </button>
+    <button class="baseBtn" style="color: #fff" (click)="onDeleteClick()">
+      刪除
+    </button>
+  </div>
 
   <!-- 下方列表 -->
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="newData">
-
       <ng-container matColumnDef="選取操作">
-        <th mat-header-cell *matHeaderCellDef style="width:10%"></th>
-        <td mat-cell *matCellDef="let element" style="width:10%">
-          <input style="width: 18px; height: 18px; accent-color: #4086c7; cursor: pointer;"  type="checkbox" [(ngModel)]="element.checked" (ngModelChange)="onCheckChange(element, $event)">
+        <th mat-header-cell *matHeaderCellDef style="width: 10%"></th>
+        <td mat-cell *matCellDef="let element" style="width: 10%">
+          <input
+            style="
+              width: 18px;
+              height: 18px;
+              accent-color: #4086c7;
+              cursor: pointer;
+            "
+            type="checkbox"
+            [(ngModel)]="element.checked"
+            (ngModelChange)="onCheckChange(element, $event)"
+          />
         </td>
       </ng-container>
 
       <ng-container matColumnDef="編號">
-        <th mat-header-cell *matHeaderCellDef style="width:10%"> 編號 </th>
-        <td mat-cell *matCellDef="let element" style="width:10%"> {{element.id}} </td>
+        <th mat-header-cell *matHeaderCellDef style="width: 10%">編號</th>
+        <td mat-cell *matCellDef="let element" style="width: 10%">
+          {{ element.id }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="名稱">
-        <th mat-header-cell *matHeaderCellDef style="width:20%"> 名稱 </th>
-        <td mat-cell *matCellDef="let element" style="width:20%">
+        <th mat-header-cell *matHeaderCellDef style="width: 20%">名稱</th>
+        <td mat-cell *matCellDef="let element" style="width: 20%">
           <a *ngIf="status(element) === '進行中'" style="">
             {{ element.name }}
           </a>
@@ -72,54 +122,82 @@
       </ng-container>
 
       <ng-container matColumnDef="狀態">
-        <th mat-header-cell *matHeaderCellDef style="width:10%"> 狀態 </th>
-        <td mat-cell *matCellDef="let element" style="width:10%"> {{ status(element) }} </td>
+        <th mat-header-cell *matHeaderCellDef style="width: 10%">狀態</th>
+        <td mat-cell *matCellDef="let element" style="width: 10%">
+          {{ status(element) }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="開始日期">
-        <th mat-header-cell *matHeaderCellDef style="width:15%"> 開始日期 </th>
-        <td mat-cell *matCellDef="let element" style="width:15%"> {{element.startDate}} </td>
+        <th mat-header-cell *matHeaderCellDef style="width: 15%">開始日期</th>
+        <td mat-cell *matCellDef="let element" style="width: 15%">
+          {{ element.startDate }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="結束日期">
-        <th mat-header-cell *matHeaderCellDef style="width:15%"> 結束日期 </th>
-        <td mat-cell *matCellDef="let element" style="width:15%"> {{element.endDate}} </td>
+        <th mat-header-cell *matHeaderCellDef style="width: 15%">結束日期</th>
+        <td mat-cell *matCellDef="let element" style="width: 15%">
+          {{ element.endDate }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="結果">
-        <th mat-header-cell *matHeaderCellDef style="width:10%"> 結果 </th>
-        <td mat-cell *matCellDef="let element" style="width:10%">
-          <a *ngIf="status(element) === '已結束'"
-          [routerLink]="['/statistical', element.id]"
-          [queryParams]="{ name: element.name }"
-          [state]="{ data: element }" style="color: rgb(143, 112, 202);">
-            <img src="search.png" alt="img_search" style="display: inline-block; width: 16px; height: 16px;">
+        <th mat-header-cell *matHeaderCellDef style="width: 10%">結果</th>
+        <td mat-cell *matCellDef="let element" style="width: 10%">
+          <a
+            *ngIf="status(element) === '已結束'"
+            [routerLink]="['/statistical', element.id]"
+            [queryParams]="{ name: element.name }"
+            [state]="{ data: element }"
+            style="color: rgb(143, 112, 202)"
+          >
+            <img
+              src="search.png"
+              alt="img_search"
+              style="display: inline-block; width: 16px; height: 16px"
+            />
           </a>
           <span *ngIf="status(element) !== '已結束'">-</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="編輯">
-        <th mat-header-cell *matHeaderCellDef style="width:10%"> 編輯 </th>
-        <td mat-cell *matCellDef="let element" style="width:10%">
+        <th mat-header-cell *matHeaderCellDef style="width: 10%">編輯</th>
+        <td mat-cell *matCellDef="let element" style="width: 10%">
           <!-- [routerLink]="['/back/backEdit', element.id]" 可以直接帶值跳轉頁面 -->
-          <a *ngIf="['尚未開始','尚未發布'].includes(status(element))" [routerLink]="['/back/backEdit', element.id]" style="color: #007185;">
-            <img src="edit.png" alt="img_eidt" style="display: inline-block; width: 16px; height: 16px;">
+          <a
+            *ngIf="['尚未開始', '尚未發布'].includes(status(element))"
+            [routerLink]="['/back/backEdit', element.id]"
+            style="color: #007185"
+          >
+            <img
+              src="edit.png"
+              alt="img_eidt"
+              style="display: inline-block; width: 16px; height: 16px"
+            />
           </a>
 
-          <span *ngIf="['已結束','進行中'].includes(status(element))">-</span>
-
+          <span *ngIf="['已結束', '進行中'].includes(status(element))">-</span>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.data-result]="row.id"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [attr.data-result]="row.id"
+      ></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      [pageSize]="5"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
     </mat-paginator>
   </div>
 </div>
 
-<footer>
-</footer>
+<footer></footer>
