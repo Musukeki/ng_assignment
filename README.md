@@ -20,5 +20,5 @@
 
 **相關檔案下載**
 
-[後端檔案](https://https://github.com/Musukeki/quiz)
+[後端檔案](https://github.com/Musukeki/quiz)
 [資料庫檔案](https://github.com/Musukeki/quiz/blob/main/datafile/quizDB.sql)
